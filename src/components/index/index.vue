@@ -10,7 +10,7 @@
           </div>
         </slider>
         <index-nav></index-nav>
-        <index-list :lists="recomPlayList"></index-list>
+        <index-list :lists="recomPlayList" @playListInfo="getPlayListInfo"></index-list>
       </div>
     </scroll>
   </div>
@@ -18,10 +18,12 @@
 
 <script type="es6">
 import axios from 'axios'
+import {getPlayListInfo} from '@/api/api'
 import Scroll from '@/base/scroll/scroll'
 import Slider from '@/base/slider/slider'
 import IndexNav from '@/components/index/nav'
 import IndexList from '@/base/index-lists/index-list'
+import {mapMutations} from 'vuex'
 const OFFSET_TOP = 80
 export default {
   name: '',
@@ -51,11 +53,13 @@ export default {
         this.CarouselList = Data.focus.data.content
         var recomPlayList = Data.recomPlaylist.data.v_hot.slice(0, 6)
         this.recomPlayList.list = recomPlayList
-        console.log(Data)
       })
     },
     ScrollHeight () {
       this.$refs.scrollChildren.style.paddingBottom = `${OFFSET_TOP}px`
+    },
+    getPlayListInfo (id) {
+      this.$router.push({path: `playlist/${id}`})
     }
   }
 }

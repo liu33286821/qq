@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Index from '@/components/index/index'
 import My from '@/components/my/my'
 import Find from '@/components/find/find'
+import PlayList from '@/components/playlist/playlist'
+import PlayListInfo from '@/components/playListInfo/playListInfo'
 Vue.use(Router)
 
 export default new Router({
@@ -25,6 +27,17 @@ export default new Router({
       path: '/find',
       name: 'Find',
       component: Find
+    },
+    {
+      path: '/playlist',
+      name: 'PlayList',
+      component: PlayList,
+      children: [
+        {
+          path: ':id',
+          component: PlayListInfo
+        }
+      ]
     }
   ]
 })

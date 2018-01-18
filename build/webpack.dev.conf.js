@@ -79,6 +79,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             info: '地址过期'
           })
         })
+      }),
+      app.get('/api/getPlayListInfo',function (req,res) {
+        let url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg';
+        let refer = `https://y.qq.com/n/yqq/playlist/${req.query.disstid}.html`
+        axios.get(url,{
+          headers: {
+            referer: refer,
+            host: 'c.y.qq.com'
+          },
+          params:req.query
+        }).then((response) => {
+           res.json(response.data)
+        }).catch((error) => {
+          console.log(error)
+        })
+
       })
     }
   },

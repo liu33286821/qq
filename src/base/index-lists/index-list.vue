@@ -3,7 +3,7 @@
       <div class="index-list-title">{{lists.title}}<router-link to="/playlist" class="icon iconfont icon-more_circle"></router-link></div>
       <div id="index-lists">
         <ul class="clearfix">
-          <li v-for="item in lists.list">
+          <li v-for="item in lists.list" @click="getInfo(item.content_id)">
             <div>
               <img class="edge_mark" v-if="item.edge_mark" :src="item.edge_mark"/>
               <img class="list-cover" :src="item.cover"/>
@@ -23,6 +23,11 @@ export default {
     lists: {
       type: Object,
       default: null
+    }
+  },
+  methods: {
+    getInfo (id) {
+      this.$emit('playListInfo', id)
     }
   }
 }
@@ -70,5 +75,6 @@ export default {
     -webkit-box-orient:vertical;
     overflow:hidden;
     line-height: 24px;
+    height: 48px;
   }
 </style>
