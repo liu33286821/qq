@@ -1,19 +1,25 @@
 <template>
-    <div class="play-list-info" v-if="cdList">
+    <div class="play-list-info" ref="cdList"   v-if="cdList">
       <div class="play-list-top">
-        <i class="icon iconfont icon-xiangzuo"></i>
+        <i class="icon iconfont icon-xiangzuo" @click="goBack"></i>
         <p>歌单</p>
         <p v-if="ShowTitle">{{cdList.dissname}}</p>
       </div>
       <scroll ref="scroll" class="scroll">
         <div class="scroll-div">
-          <div class="music-title">
+          <div class="music-title clearfix" >
             <div class="music-title-bg" ref="musicTitleBg" :style="{backgroundImage:`url(${cdList.logo})`}"></div>
-            <div class="music-title-con">
-              <img :src="cdList.logo"/>
+            <div class="music-title-con clearfix" ref="musciTitleCon">
+              <div class="music-title-l">
+                <img :src="cdList.logo" ref="musicTitleImage"  width="100%" height="100%"/>
+                <div class="music-title-l-bottom">
+                  <p><i class="icon iconfont icon-toudaierji"></i><span>{{PlayNum}}</span></p>
+                </div>
+              </div>
+
               <div class="music-title-r">
                 <h2>{{cdList.dissname}}</h2>
-                <p>简介：{{cdList.desc}}</p>
+                <p>简介：<Span v-html="cdList.desc"></Span></p>
               </div>
             </div>
             <favorite></favorite>
@@ -21,6 +27,7 @@
           <div class="music-list"></div>
         </div>
       </scroll>
+      <error-info :Info="errorInfo" v-show="errorInfo.status"></error-info>
     </div>
 </template>
 
@@ -28,9 +35,11 @@
 import {getPlayListInfo} from '@/api/api'
 import Scroll from '@/base/scroll/scroll.vue'
 import Favorite from '@/base/favorite/favorite'
-const Height = 40
+import errorInfo from '@/base/error-info/error-info'
+import {mapGetters} from 'vuex'
+const PaddingHeight = 130
 export default {
-  components: {Scroll, Favorite},
+  components: {Scroll, Favorite, errorInfo},
   name: '',
   data () {
     return {
@@ -38,28 +47,45 @@ export default {
       ShowTitle: false
     }
   },
-  created () {
+  computed: {
+    PlayNum () {
+      let num = this.cdList.visitnum + ''
+      if (num.length > 4) {
+        let num2 = num.substr(0, num.length - 4)
+        return num2 + '万'
+      }
+    },
+    ...mapGetters(['errorInfo'])
+  },
+  mounted () {
     let id = this.$route.params.id
-    if (id) {
-      this.getData(id)
-    }
+    getPlayListInfo(id).then((res) => {
+      this.cdList = res.cdlist[0]
+    })
   },
   updated () {
-    this.getBgHeight()
+    let _this = this
+    window.addEventListener('resize', function () {
+      _this.getBgHeight()
+    })
   },
   methods: {
+    getDataa () {
+      return 455
+    },
     getData (id) {
       getPlayListInfo(id).then((res) => {
         this.cdList = res.cdlist[0]
-        console.log(this.cdList)
       })
     },
     getBgHeight () {
-      let width = this.$refs.musicTitleBg.parentNode.clientWidth
-      let height = this.$refs.musicTitleBg.parentNode.clientHeight
-      height += Height
-      this.$refs.musicTitleBg.style.width = `${width}px`
-      this.$refs.musicTitleBg.style.height = `${height}px`
+      let ImgHeight = this.$refs.musicTitleImage.clientHeight
+      this.$refs.musicTitleBg.style.width = `100%`
+      this.$refs.musicTitleBg.style.height = `${ImgHeight + PaddingHeight}px`
+      console.log(this.$refs.musicTitleImage.clientWidth)
+    },
+    goBack () {
+      this.$router.go(-1)
     }
   }
 }
@@ -89,7 +115,7 @@ export default {
     left: 15px;
     top: 0;
     color: #fff;
-    font-size: 20px;
+    font-size: 24px;
   }
   .music-title-bg{
     background-size: 150% 150%;
@@ -102,6 +128,8 @@ export default {
     position: absolute;
     top: -40px;
     left: 0;
+    width: 100%;
+    height: 110%;
   }
   .music-title{
     position: relative;
@@ -109,13 +137,15 @@ export default {
   .music-title-con{
     position: relative;
     z-index: 10;
-    padding:25px 35px;
+    padding:15px;
   }
-  .music-title-con img{
+  .music-title-l{
     width: 40%;
     height: auto;
     float: left;
+    position: relative;
   }
+  .music-title-l img{width: 100%;height: 100%}
   .music-title-r{
     text-align: left;
     margin-left: 43%;
@@ -124,7 +154,7 @@ export default {
   .music-title-r h2{
     font-size: 16px;
     line-height: 24px;
-    margin: 20px 0;
+    margin: 5% 0;
     font-weight: 100;
   }
   .music-title-r p{
@@ -135,5 +165,24 @@ export default {
     -webkit-box-orient:vertical;
     overflow:hidden;
     line-height: 24px;
+  }
+  .music-title-l-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    text-align: left;
+    line-height: 40px;
+    padding-left: 10px;
+  }
+  .icon-toudaierji{
+    margin-right: 10px;
+    vertical-align: middle;
+    font-size: 20px;
+  }
+  .music-title-l-bottom span{
+    vertical-align: middle;
+    font-size: 14px;
   }
 </style>

@@ -1,1 +1,1 @@
-export const PlayListInfo = state => state.PlayListInfo
+export const errorInfo = state => state.errorInfo

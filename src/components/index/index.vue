@@ -18,12 +18,10 @@
 
 <script type="es6">
 import axios from 'axios'
-import {getPlayListInfo} from '@/api/api'
 import Scroll from '@/base/scroll/scroll'
 import Slider from '@/base/slider/slider'
 import IndexNav from '@/components/index/nav'
 import IndexList from '@/base/index-lists/index-list'
-import {mapMutations} from 'vuex'
 const OFFSET_TOP = 80
 export default {
   name: '',

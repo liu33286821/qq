@@ -1,20 +1,11 @@
 import axios from 'axios'
-import {type, commonParams} from "@/api/config";
+import {commonType} from "@/api/config";
 
 export function getPlayListInfo (disstid) {
   const url = '/api/getPlayListInfo'
-  const data = Object.assign({}, commonParams, {
-    disstid,
-    type: 1,
-    json: 1,
-    utf8: 1,
-    onlysong: 0,
-    loginUin: 0,
-    hostUin: 0,
-    platform: 'yqq',
-    needNewCode: 0,
-    g_tk: 523590146,
-    format: 'json'
+  console.log(commonType)
+  const data = Object.assign({}, commonType, {
+    disstid
   })
   return axios.get(url, {
     params: data

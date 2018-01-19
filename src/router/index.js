@@ -31,13 +31,11 @@ export default new Router({
     {
       path: '/playlist',
       name: 'PlayList',
-      component: PlayList,
-      children: [
-        {
-          path: ':id',
-          component: PlayListInfo
-        }
-      ]
+      component: PlayList
+    },
+    {
+      path: '/playlist/:id',
+      component: PlayListInfo
     }
   ]
 })
