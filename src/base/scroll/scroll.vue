@@ -13,7 +13,7 @@ export default {
       type: Array,
       default: null
     },
-    protoType: {
+    probeType: {
       type: Number,
       default: 1
     },
@@ -23,7 +23,7 @@ export default {
     },
     listenScroll: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   mounted () {
@@ -38,15 +38,13 @@ export default {
         return
       }
       this.scroll = new BScroll(this.$refs.wrapper, {
-        protoType: this.protoType,
+        probeType: this.probeType,
         click: this.click
       })
       if (this.listenScroll) {
         let me = this
         this.scroll.on('scroll', (pos) => {
-          console.log(pos)
           me.$emit('scroll', pos)
-          alert(1)
         })
       }
     },

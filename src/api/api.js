@@ -1,9 +1,8 @@
 import axios from 'axios'
-import {commonType} from "@/api/config";
+import {commonType, SongMusic} from "@/api/config";
 
 export function getPlayListInfo (disstid) {
   const url = '/api/getPlayListInfo'
-  console.log(commonType)
   const data = Object.assign({}, commonType, {
     disstid
   })
@@ -11,7 +10,17 @@ export function getPlayListInfo (disstid) {
     params: data
   }).then((res) => {
     return Promise.resolve(res.data)
-  }).catch((error) => {
+  }).catch(() => {
     console.log('连接不可用了。')
+  })
+}
+export function getMusic (id) {
+  const url = `/api/music/${id}`
+  const data = Object.assign({}, SongMusic)
+  console.log(url)
+  axios.get(url, {
+    params: data
+  }).then(function (res) {
+    console.log(res)
   })
 }

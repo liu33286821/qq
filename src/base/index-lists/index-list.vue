@@ -20,7 +20,7 @@ import Scroll from '@/base/scroll/scroll.vue'
 export default {
   components: {Scroll},
   props: {
-    lists: {
+    lists: {  //从父组件传递过来的值
       type: Object,
       default: null
     }

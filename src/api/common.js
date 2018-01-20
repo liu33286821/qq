@@ -1,5 +1,12 @@
-export function formatNum (str) {
-  let str2 = str + ''
-  return str2.split('').reverse().join('')
-    .replace(/([0-9]{3})/g, '$1,').split('').reverse().join('')
+export function SingerNameSort (arr) {  //歌手名字组合
+  if (!arr.length) return
+  var singer = []
+  arr.forEach((item) => {
+    singer.push(item.name)
+  })
+  if (!singer) return '佚名'
+  if (singer.length > 1) {
+    return singer.join(' / ')
+  }
+  return singer[0]
 }

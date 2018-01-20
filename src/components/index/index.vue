@@ -1,19 +1,21 @@
 <template>
-  <div class="index">
-    <scroll class="scroll" ref="scroll" :data="CarouselList">
-      <div ref="scrollChildren">
-        <slider class="slider-wrapper"  v-if="CarouselList.length">
-          <div v-for="item in CarouselList" class="slider-item">
-            <a href="javascript:;">
-              <img :src="item.pic_info.url"/>
-            </a>
-          </div>
-        </slider>
-        <index-nav></index-nav>
-        <index-list :lists="recomPlayList" @playListInfo="getPlayListInfo"></index-list>
-      </div>
-    </scroll>
-  </div>
+  <keep-alive>
+    <div class="index">
+      <scroll class="scroll" ref="scroll" :data="CarouselList">
+        <div ref="scrollChildren">
+          <slider class="slider-wrapper"  v-if="CarouselList.length">
+            <div v-for="item in CarouselList" class="slider-item">
+              <a href="javascript:;">
+                <img :src="item.pic_info.url"/>
+              </a>
+            </div>
+          </slider>
+          <index-nav></index-nav>
+          <index-list :lists="recomPlayList" @playListInfo="getPlayListInfo"></index-list>
+        </div>
+      </scroll>
+    </div>
+  </keep-alive>
 </template>
 
 <script type="es6">
