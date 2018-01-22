@@ -1,15 +1,17 @@
 <template>
   <div id="app">
     <m-header></m-header>
-      <router-view/>
+    <router-view/>
+    <play></play>
   </div>
 </template>
 
 <script>
 import MHeader from '@/components/header/header'
+import Play from '@/components/play/play'
 export default {
   name: 'App',
-  components: {MHeader}
+  components: {MHeader, Play}
 }
 </script>
 

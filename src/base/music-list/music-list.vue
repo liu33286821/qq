@@ -38,10 +38,13 @@
         PlayMusicList: 'PlayMusicList'
       }),
       getMusicId (item) {
+        let ImgUrl = `http://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albummid}.jpg`
         var data = {
+          id: item.songid,
           singer: item.singer,
           songmid: item.songmid,
-          songname: item.songname
+          songname: item.songname,
+          songImage: ImgUrl
         }
         this.PlayMusicList({
           music: data

@@ -1,6 +1,6 @@
 <template>
     <div class="play-list-info" ref="cdList"   v-if="cdList">
-      <div class="play-list-top">
+      <div class="play-list-top" ref="Top">
         <i class="icon iconfont icon-xiangzuo" @click="goBack"></i>
         <p v-if="!showTitle">歌单</p>
         <div v-if="showTitle" class="show-title">
@@ -99,6 +99,7 @@ export default {
         lists.forEach(function (item, index) {
           _this.cdList.songlist[index].singer = SingerNameSort(item.singer)
         })
+        console.log(this.cdList.songlist)
       })
     },
     getBgHeight () {  //屏幕测试拉伸的话  页面大小会不一致。 所以需要根据屏幕的宽度来进行改变
@@ -121,18 +122,28 @@ export default {
       if (newValue < oldValue) {
         opc = Math.max(0, OPACITY - opacity)
         this.fixed = true
-        this.showTitle = true
+        this.$refs.Top.style.backgroundImage = `url(${this.cdList.logo})`
+        this.$refs.Top.style.opacity = `${1 - opc}`
       } else {
         opc = OPACITY - opacity
-        this.fixed = false
+        this.$refs.Top.style.backgroundImage = `url(${this.cdList.logo})`
+        this.$refs.Top.style.color = '#fff'
       }
-      if (newValue > 0) {
+      if (newValue >= 0) {
         this.showTitle = false
+        this.$refs.Top.style.backgroundColor = `rgba(255,255,255,${Math.min(0.3, OPACITY - opacity)})`
+        this.$refs.Top.style.color = '#fff'
+        this.$refs.Top.style.backgroundImage = 'none'
+        this.$refs.Top.style.opacity = `${Math.min(1, Math.max(1, -(OPACITY - opacity)))}`
       }
       if (-newValue >= height - 40) {
         this.showCommonTitle = true
+        this.showTitle = true
+        this.$refs.Top.style.opacity = `${Math.max(1, 0 + opc)}`
       } else {
         this.showCommonTitle = false
+        this.showTitle = false
+        this.$refs.Top.style.opacity = `${0 + opc}`
       }
       this.opacity = opc
     }
@@ -148,6 +159,7 @@ export default {
     top: 0;
     background:#ccc;
     color: #fff;
+    padding-bottom: 60px;
   }
   .play-list-top{
     height: 40px;
@@ -155,8 +167,10 @@ export default {
     text-align: center;
     position: relative;
     z-index: 100;
-    background: rgb(0,0,0);
+    background: rgba(255,255,255,.3);
     text-align: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   .play-list-top .show-title{
     width: 65%;

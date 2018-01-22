@@ -6,6 +6,5 @@ export const Undeveloped = function ({commit}, {status}) {  //暂未开发功能
   }, 1500)
 }
 export const PlayMusicList = function ({commit}, {music}) {
-  console.log(music)
   commit(types.PLAY_MUSIC_LIST, music)
 }

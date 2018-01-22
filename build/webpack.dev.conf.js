@@ -95,11 +95,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           console.log(error)
         })
 
-      }),
-        app.get('/api/music/',function (req,res) {
-          const url = 'http://dl.stream.qqmusic.qq.com/C400001GJSJD47q0dF.m4a'
-          console.log(req)
-        })
+      })
     }
   },
   plugins: [

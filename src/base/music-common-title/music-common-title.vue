@@ -48,7 +48,7 @@
     text-align: left;
   }
   #play-icon ul li{
-    flex: 1;
+    width: 70px;
   }
   #play-icon ul li:first-child{
     flex: 2;

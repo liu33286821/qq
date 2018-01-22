@@ -70,7 +70,8 @@ export default {
     top: 80px;
     width: 100%;
     height: 100%;
-    bottom: 0
+    bottom: 0;
+    padding-bottom: 60px;
   }
   .scroll{
     height: 100%;
