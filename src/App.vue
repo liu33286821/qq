@@ -2,16 +2,16 @@
   <div id="app">
     <m-header></m-header>
     <router-view/>
-    <play></play>
+    <player></player>
   </div>
 </template>
 
 <script>
 import MHeader from '@/components/header/header'
-import Play from '@/components/play/play'
+import Player from '@/components/player/player'
 export default {
   name: 'App',
-  components: {MHeader, Play}
+  components: {MHeader, Player}
 }
 </script>
 

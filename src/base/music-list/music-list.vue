@@ -47,7 +47,8 @@
           songImage: ImgUrl
         }
         this.PlayMusicList({
-          music: data
+          music: data,
+          playing: true
         })
       }
     }

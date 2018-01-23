@@ -76,5 +76,6 @@ export default {
     overflow:hidden;
     line-height: 24px;
     height: 48px;
+    text-align: left;
   }
 </style>
