@@ -92,6 +92,8 @@ input, select {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.text-r{text-align: right}
+.text-l{text-align: left}
 .w1200{
     width: 1200px;
     margin: 0 auto;

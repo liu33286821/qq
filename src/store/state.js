@@ -10,6 +10,7 @@ const state = {
     sequence: 1,
     random: 2
   },
+  playModeNum: 1,
   playing: false
 }
 export default state

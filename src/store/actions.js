@@ -12,3 +12,10 @@ export const PlayMusicList = function ({commit}, {music, playing}) { //歌曲播
 export const PlayMusic = function ({commit}, {index, id}) {
   commit(types.PLAY_LIST, {index, id})
 }
+
+export const PlayStatus = function ({commit}, {status}) {
+  commit(types.PLAY_STATUS, status)
+}
+export const PlayModeNum = function ({commit}) {
+  commit(types.PLAY_MODE_NUM)
+}

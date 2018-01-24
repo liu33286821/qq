@@ -2,13 +2,12 @@
     <div id="fixed-play" @click="MusicInfoShow">
       <div class="play-music">
         <div  v-if="lists.length">
-          <div class="play-image">
-            <img :class="{'playing': playing}" :src="lists[index].songImage"/>
+          <div class="play-image" :class="{'playing': !playing}">
+            <img :src="lists[index].songImage"/>
           </div>
           <div class="music-info">
             <p>{{lists[index].songname}}</p>
             <p>{{lists[index].singer}}</p>
-            <audio ref="Audio" :src="lists[index].mp3Url" autoplay></audio>
           </div>
         </div>
         <div v-if="!lists.length" class="zero-show">QQ音乐 听我想听的歌</div>
@@ -21,10 +20,13 @@
 <script>
   import {mapGetters, mapActions, mapMutations} from 'vuex'
   export default {
+    props: {
+      PlayToggle: {
+        type: String,
+        default: ''
+      }
+    },
     computed : {
-      PlayToggle () {
-        return this.playing ? 'icon-zanting' : 'icon-play-circle'
-      },
       ...mapGetters({
         index: 'currentIndex',
         playing: 'playing',
@@ -32,6 +34,9 @@
       })
     },
     methods: {
+      ...mapActions({
+        PlayStatus: 'PlayStatus'
+      }),
       Show (e) {
         if (!this.lists.length) {
           return
@@ -42,14 +47,7 @@
         console.log('music详情页面')
       },
       Pause () {
-        let audio = this.$refs.Audio
-        if (!audio.paused) {
-          audio.pause()
-          this.playing = false
-        } else {
-          audio.play()
-          this.playing = true
-        }
+        this.$emit('Pause')
       }
     }
   }
@@ -81,11 +79,7 @@
     float: left;
     animation: rotateImg 20s infinite linear;
   }
-  .play-image img.playing{
-    animation-play-state:paused;
-    -webkit-animation-play-state:paused;
-  }
-  .play-image img{width: 100%;height: 100%;border-radius: 50%}
+  .play-image img{width: 100%;height: 100%;border-radius: 50%;}
   .music-info{
     display: inline-block;
     vertical-align: middle;
@@ -116,6 +110,10 @@
     font-size: 16px;
     line-height: 40px;
     margin-left: 15px;
+  }
+  .play-image.playing{
+    animation-play-state:paused;
+    -webkit-animation-play-state:paused;
   }
   @keyframes rotateImg {
     from {transform: rotate(0deg)}

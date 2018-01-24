@@ -44,7 +44,8 @@
           singer: item.singer,
           songmid: item.songmid,
           songname: item.songname,
-          songImage: ImgUrl
+          songImage: ImgUrl,
+          interval: item.interval
         }
         this.PlayMusicList({
           music: data,
