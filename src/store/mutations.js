@@ -6,8 +6,9 @@ const mutations = {
   [types.PLAY_MUSIC_LIST] (state, music) { //歌曲播放列表
     let List = state.PlayMusicList
     state.currentIndex = List.length - 1 < 0 ? 0 : List.length
-    music.mp3Url = `http://dl.stream.qqmusic.qq.com/C400${music.songmid}.m4a?guid=1297949334&vkey=746AFE5A498486A1B7B45D1DA425B1E658F6825554A97AAC3A465C7451404B95C7F3DE8ECDC5E21A9D9888EB86287AD8FE94B752B811A47C&uin=&fromtag=999`
-    console.log(state.currentIndex)
+    //music.mp3Url = `http://dl.stream.qqmusic.qq.com/C400${music.songmid}.m4a?guid=1297949334&vkey=746AFE5A498486A1B7B45D1DA425B1E658F6825554A97AAC3A465C7451404B95C7F3DE8ECDC5E21A9D9888EB86287AD8FE94B752B811A47C&uin=&fromtag=999`
+    music.mp3Url = `http://isure.stream.qqmusic.qq.com/C100${music.songmid}.m4a?fromtag=32`
+    //console.log(state.currentIndex)
     if (List.length > 0) {
       for (let i = 0; i < List.length; i++) {
         List[i].index = i

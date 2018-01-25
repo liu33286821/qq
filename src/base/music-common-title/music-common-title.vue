@@ -11,18 +11,18 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      lists: {
-        type: Array,
-        default: null
-      },
-      TopTitle: {
-        type: Boolean,
-        default: false
-      }
+export default {
+  props: {
+    lists: {
+      type: Array,
+      default: null
+    },
+    TopTitle: {
+      type: Boolean,
+      default: false
     }
   }
+}
 </script>
 <style scoped>
   #music-list-title{

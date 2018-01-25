@@ -5,15 +5,15 @@
 </template>
 
 <script>
-  import Scroll from '@/base/scroll/scroll.vue'
+import Scroll from '@/base/scroll/scroll.vue'
 
-  export default {
-    components: {Scroll},
-    name: '',
-    data () {
-      return {}
-    }
+export default {
+  components: {Scroll},
+  name: '',
+  data () {
+    return {}
   }
+}
 </script>
 <style scoped>
 </style>

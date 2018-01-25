@@ -5,14 +5,14 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      Info: {
-        type: Object,
-        default: null
-      }
+export default {
+  props: {
+    Info: {
+      type: Object,
+      default: null
     }
   }
+}
 </script>
 <style scoped>
   .error-info {

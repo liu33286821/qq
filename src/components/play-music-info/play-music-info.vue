@@ -55,35 +55,35 @@
 </template>
 
 <script>
-  import {mapActions,mapMutations,mapGetters} from 'vuex'
-  export default {
-    name: '',
-    data () {
-      return {
-        playModeName: ['单曲循环', '顺序播放', '随机播放'],
-        show: 1
-      }
+import {mapGetters} from 'vuex'
+export default {
+  name: '',
+  data () {
+    return {
+      playModeName: ['单曲循环', '顺序播放', '随机播放'],
+      show: 1
+    }
+  },
+  computed: {
+    ...mapGetters({
+      lists: 'PlayMusicList',
+      currentIndex: 'currentIndex',
+      playing: 'playing',
+      PLAY_MODE: 'playMode',
+      playModeNum: 'playModeNum'
+    }),
+    iconMode () {
+      return this.playModeNum % 3 === this.PLAY_MODE.sequence ? 'icon-xunhuanbofang'
+        : this.playModeNum % 3 === this.PLAY_MODE.random ? 'icon-random'
+          : 'icon-danquxunhuan'
     },
-    computed: {
-      ...mapGetters({
-        lists: 'PlayMusicList',
-        currentIndex: 'currentIndex',
-        playing: 'playing',
-        PLAY_MODE: 'playMode',
-        playModeNum: 'playModeNum'
-      }),
-      iconMode () {
-        return this.playModeNum % 3 === this.PLAY_MODE.sequence ? 'icon-xunhuanbofang'
-          : this.playModeNum % 3 === this.PLAY_MODE.random ? 'icon-random'
-            : 'icon-danquxunhuan'
-      },
-    },
-    methods: {
-      Show () {
-        console.log(this.playing)
-      }
+  },
+  methods: {
+    Show () {
+      console.log(this.playing)
     }
   }
+}
 </script>
 <style scoped>
   #play-music-info {

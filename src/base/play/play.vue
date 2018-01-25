@@ -18,39 +18,39 @@
 </template>
 
 <script>
-  import {mapGetters, mapActions, mapMutations} from 'vuex'
-  export default {
-    props: {
+import {mapGetters, mapActions, mapMutations} from 'vuex'
+export default {
+  props: {
       PlayToggle: {
         type: String,
         default: ''
       }
-    },
-    computed : {
-      ...mapGetters({
-        index: 'currentIndex',
-        playing: 'playing',
-        lists: 'PlayMusicList'
-      })
-    },
-    methods: {
-      ...mapActions({
-        PlayStatus: 'PlayStatus'
-      }),
-      Show (e) {
-        if (!this.lists.length) {
-          return
-        }
-        this.$emit('show', e)
-      },
-      MusicInfoShow () {
-        console.log('music详情页面')
-      },
-      Pause () {
-        this.$emit('Pause')
+  },
+  computed : {
+    ...mapGetters({
+      index: 'currentIndex',
+      playing: 'playing',
+      lists: 'PlayMusicList'
+    })
+  },
+  methods: {
+    ...mapActions({
+      PlayStatus: 'PlayStatus'
+    }),
+    Show (e) {
+      if (!this.lists.length) {
+        return
       }
+      this.$emit('show', e)
+    },
+    MusicInfoShow () {
+      this.$emit('PlayInfoShow')
+    },
+    Pause () {
+      this.$emit('Pause')
     }
   }
+}
 </script>
 <style scoped>
   #fixed-play {

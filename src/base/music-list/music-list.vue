@@ -19,41 +19,41 @@
 </template>
 
 <script>
-  import MusicCommonTitle from '@/base/music-common-title/music-common-title'
-  import {mapActions} from 'vuex'
-  export default {
-    components: {MusicCommonTitle},
-    props: {
-      lists: {
-        type: Array,
-        default: null
-      },
-      bottom: {
-        type: Number,
-        default: 0
-      }
+import MusicCommonTitle from '@/base/music-common-title/music-common-title'
+import {mapActions} from 'vuex'
+export default {
+  components: {MusicCommonTitle},
+  props: {
+    lists: {
+      type: Array,
+      default: null
     },
-    methods: {
-      ...mapActions({
-        PlayMusicList: 'PlayMusicList'
-      }),
-      getMusicId (item) {
-        let ImgUrl = `http://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albummid}.jpg`
-        var data = {
-          id: item.songid,
-          singer: item.singer,
-          songmid: item.songmid,
-          songname: item.songname,
-          songImage: ImgUrl,
-          interval: item.interval
-        }
-        this.PlayMusicList({
-          music: data,
-          playing: true
-        })
+    bottom: {
+      type: Number,
+      default: 0
+    }
+  },
+  methods: {
+    ...mapActions({
+      PlayMusicList: 'PlayMusicList'
+    }),
+    getMusicId (item) {
+      let ImgUrl = `http://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albummid}.jpg`
+      var data = {
+        id: item.songid,
+        singer: item.singer,
+        songmid: item.songmid,
+        songname: item.songname,
+        songImage: ImgUrl,
+        interval: item.interval
       }
+      this.PlayMusicList({
+        music: data,
+        playing: true
+      })
     }
   }
+}
 </script>
 <style scoped>
   #music-list{

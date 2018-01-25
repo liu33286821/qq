@@ -3,6 +3,7 @@
     <play @show="Show"
           :PlayToggle="PlayToggle"
           @Pause="Pause"
+          @PlayInfoShow="PlayInfoShow"
     ></play>
     <div class="player-list" v-if="lists.length">
       <div id="player-title">
@@ -43,70 +44,82 @@
         </div>
       </div>
     </div>
-    <div id="play-music-info" v-if="lists.length">
-      <div class="play-music-bg" :style="{'backgroundImage':`url(${lists[currentIndex].songImage})`}"></div>
-      <div class="content">
-        <div class="play-music-info-top">
-          <i class="icon iconfont icon-xiala2"></i>
-          <div class="play-music-info-title">
-            <span>{{lists[currentIndex].songname}}</span>
-          </div>
-          <i class="icon iconfont icon-listmore"></i>
-        </div>
-        <div class="play-music-info-center">
-          <div v-if="show % 3 === 0" class="play-music-info-content">
-            <ul>
-              <li>
-                <div><img src=""/></div>
-                <div><p>歌手：赵雷</p></div>
-              </li>
-              <li>
-                <div><img src=""/></div>
-                <div><p>专辑：十九岁</p></div>
-              </li>
-            </ul>
-          </div>
-          <div v-if="show % 3 === 1" class="play-music-info-image">
-            <p>— {{lists[currentIndex].singer}} —</p>
-            <p>
-              <span>标准</span>
-              <span>音效</span>
-            </p>
-            <div class="song-image" :class="{'playing': !playing}">
-              <img :src="lists[currentIndex].songImage"/>
+    <transition name="fade">
+      <div id="play-music-info" v-if="lists.length" v-show="PlayMusicInfoShow">
+          <div class="play-music-bg" :style="{'backgroundImage':`url(${lists[currentIndex].songImage})`}"></div>
+          <div class="content">
+            <div class="play-music-info-top">
+              <i class="icon iconfont icon-xiala2" @click="PlayInfoHide"></i>
+              <div class="play-music-info-title">
+                <span>{{lists[currentIndex].songname}}</span>
+              </div>
+              <i class="icon iconfont icon-listmore"></i>
             </div>
-            <div>
-              <p>歌词</p>
+            <div class="play-music-info-center"
+                 @touchstart="TouchStart"
+                 @touchmove="TouchMove"
+                 @touchend = "TouchEnd"
+            >
+              <transition name="content">
+                <div v-show="show % 3 === 0" class="play-music-info-content">
+                  <ul>
+                    <li>
+                      <div><img src=""/></div>
+                      <div><p>歌手：赵雷</p></div>
+                    </li>
+                    <li>
+                      <div><img src=""/></div>
+                      <div><p>专辑：十九岁</p></div>
+                    </li>
+                  </ul>
+                </div>
+              </transition>
+              <transition name="image">
+                <div v-show="show % 3 === 1" class="play-music-info-image">
+                  <p>— {{lists[currentIndex].singer}} —</p>
+                  <p>
+                    <span>标准</span>
+                    <span>音效</span>
+                  </p>
+                  <div class="song-image" :class="{'playing': !playing}">
+                    <img :src="lists[currentIndex].songImage"/>
+                  </div>
+                  <div>
+                    <p>歌词</p>
+                  </div>
+                  <ul class="button-show">
+                    <li :class="{'active':show % 3 === 0 }"></li>
+                    <li :class="{'active':show % 3 === 1 }"></li>
+                    <li :class="{'active':show % 3 === 2 }"></li>
+                  </ul>
+                </div>
+              </transition>
+              <transition name="lyric">
+                <div v-show="show % 3 === 2" class="play-music-info-lyric"></div>
+              </transition>
             </div>
-            <ul class="button-show">
-              <li :class="{'active':show % 3 === 0 }"></li>
-              <li :class="{'active':show % 3 === 1 }"></li>
-              <li :class="{'active':show % 3 === 2 }"></li>
-            </ul>
-          </div>
-          <div v-if="show % 3 === 2" class="play-music-info-lyric"></div>
-        </div>
-        <div class="play-music-info-bottom">
-          <div class="play-music-info-time">
-            <span class="time-start">{{format(currentTime)}}</span>
-            <div class="process" ref="processDiv">
-              <div class="process-bar2" ref="progress"></div>
-              <div class="process-bar-btn"  ref="progressBtn"></div>
+            <div  class="play-music-info-bottom">
+              <div class="play-music-info-time">
+                <span class="time-start">{{format(currentTime)}}</span>
+                <div class="process" ref="processDiv">
+                  <div class="process-bar2" ref="progress"></div>
+                  <div class="process-bar-btn"  ref="progressBtn"></div>
+                </div>
+                <span class="time-end">{{format(lists[currentIndex].interval)}}</span>
+              </div>
+              <div class="play-music-info-handler">
+                <i @click.stop="Mode" class="icon iconfont text-r" :class="iconMode"></i>
+                <i class="icon iconfont icon-shangyishou text-r"></i>
+                <i class="icon iconfont" :class="PlayToggle" @click="Pause"></i>
+                <i class="icon iconfont icon-xiayishou text-l"></i>
+                <i class="icon iconfont icon-menu text-l"></i>
+              </div>
+              <div class="play-music-info-button">
+              </div>
             </div>
-            <span class="time-end">{{format(lists[currentIndex].interval)}}</span>
-          </div>
-          <div class="play-music-info-handler">
-            <i @click.stop="Mode" class="icon iconfont text-r" :class="iconMode"></i>
-            <i class="icon iconfont icon-shangyishou text-r"></i>
-            <i class="icon iconfont" :class="PlayToggle" @click="Pause"></i>
-            <i class="icon iconfont icon-xiayishou text-l"></i>
-            <i class="icon iconfont icon-menu text-l"></i>
-          </div>
-          <div class="play-music-info-button">
           </div>
         </div>
-      </div>
-    </div>
+    </transition>
     <audio v-if="lists.length"
            ref="Audio"
            :src="lists[currentIndex].mp3Url"
@@ -116,21 +129,25 @@
 </template>
 
 <script type="es6">
-  import Play from '@/base/play/play'
-  import Scroll from '@/base/scroll/scroll.vue'
-  import { mapGetters, mapActions, mapMutations } from 'vuex'
+import Play from '@/base/play/play'
+import Scroll from '@/base/scroll/scroll.vue'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
-  const progressBtnWidth = 16 //播放按钮圆点的宽度
-  export default {
-    components: {Scroll, Play},
-    data () {
-      return {
-        playModeName: ['单曲循环', '顺序播放', '随机播放'],
-        show: 1,  //滑动 0 1 2 显示3个页面
-        currentTime: 0,
-      }
-    },
-    computed: {
+const progressBtnWidth = 16 //播放按钮圆点的宽度
+export default {
+  components: {Scroll, Play},
+  data () {
+    return {
+      playModeName: ['单曲循环', '顺序播放', '随机播放'],
+      show: 1,  //滑动 0 1 2 显示3个页面
+      currentTime: 0,
+      PlayMusicInfoShow: false
+    }
+  },
+  created () {
+    this.touches = {} //用来保存滑动的变量
+  },
+  computed: {
       ...mapGetters({
         lists: 'PlayMusicList',
         currentIndex: 'currentIndex',
@@ -150,34 +167,34 @@
         if (this.lists.length) return this.currentTime / this.lists[this.currentIndex].interval
       }
     },
-    methods: {
-      ...mapActions({
-        PLAY_MUSIC: 'PlayMusic',
-        PlayStatus: 'PlayStatus'
-      }),
-      timeupdate (e) { //更新播放时间
+  methods: {
+    ...mapActions({
+      PLAY_MUSIC: 'PlayMusic',
+      PlayStatus: 'PlayStatus'
+    }),
+    timeupdate (e) { //更新播放时间
         this.currentTime = e.target.currentTime
       },
-      format (interval) { //格式化时间
+    format (interval) { //格式化时间
         interval = Math.floor(interval)
         const minute = Math.floor(interval / 60)
         const second = Math.floor(interval % 60) < 10 ? `0${Math.floor(interval % 60)}` : Math.floor(interval % 60)
         return `${minute}:${second}`
       },
-      Mode () {//监听了播放模式的循环
+    Mode () {//监听了播放模式的循环
         this.$store.dispatch('PlayModeNum')
       },
-      Close () { //关闭播放页面
+    Close () { //关闭播放页面
         this.$refs.scrollDiv2.style.transform = 'translate3d(0,100%,0)'
         this.$refs.scrollDiv.style.opacity = '0'
         this.$refs.scrollDiv.style.zIndex = '-1'
       },
-      Show (e) {//展开播放页面
+    Show (e) {//展开播放页面
         this.$refs.scrollDiv2.style.transform = 'translate3d(0,0,0)'
         this.$refs.scrollDiv.style.opacity = '1'
         this.$refs.scrollDiv.style.zIndex = '100'
       },
-      Pause () {//暂停
+    Pause () {//暂停
         let audio = this.$refs.Audio
         if (!audio.paused) {
           audio.pause()
@@ -192,24 +209,46 @@
         }
         console.log(this.playing)
       },
-      PlayMusic (index, id) { //获取点击选中的播放
+    PlayMusic (index, id) { //获取点击选中的播放
         this.PLAY_MUSIC({
           index: index,
           id: id
         })
       },
+    PlayInfoHide () { //播放详情页面隐藏
+        this.PlayMusicInfoShow = false
+      },
+    PlayInfoShow () { //播发详情页面显示
+      this.PlayMusicInfoShow = true
     },
-    watch: {
-      processWidth (newWidth) {//监听设置播放的宽度
-        if (newWidth > 0) {
-          const processbarWidth = this.$refs.processDiv.clientWidth - progressBtnWidth
-          const offsetWidth = newWidth * processbarWidth
-          this.$refs.progress.style.width = `${offsetWidth}px`
-          this.$refs.progressBtn.style['transform'] = `translate3d(${offsetWidth}px,0,0)`
-        }
+    TouchStart (e) {
+      this.touches.Start = true //开始滑动
+      const touch = e.touches[0]
+      this.touches.startX = touch.pageX //滑动的左距离
+      this.touches.startY = touch.pageX //滑动的上下距离
+    },
+    TouchMove (e) {
+      if (!this.touches.Start) return  //如果在开始的时候没有设置成true  那么就返回出去 不进行滑动
+      //进行获取滑动的距离
+      const touch = e.touches[0]
+      let MoveX = touch.pageX - this.touches.startX //滑动偏移的距离
+      let MoveY = touch.pageY - this.touches.startY
+      //滑动的时候 有可能从上向下滑动， 那么就需要返回 不就行任何操作 Math.abs() 返回绝对值， 如果说值为负数也会返回正值
+      if (Math.abs(MoveY) > Math.abs(MoveX)) return
+    },
+    TouchEnd (e) {}
+  },
+  watch: {
+    processWidth (newWidth) {//监听设置播放的宽度
+      if (newWidth > 0) {
+        const processbarWidth = this.$refs.processDiv.clientWidth - progressBtnWidth
+        const offsetWidth = newWidth * processbarWidth
+        this.$refs.progress.style.width = `${offsetWidth}px`
+        this.$refs.progressBtn.style['transform'] = `translate3d(${offsetWidth}px,0,0)`
       }
     }
   }
+}
 </script>
 <style scoped>
   .scroll-div {
@@ -346,6 +385,7 @@
     text-align: left;
     line-height: 40px;
     height: 40px;
+    transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32)
   }
 
   .play-music-info-top .icon {
@@ -441,6 +481,7 @@
     left: 0;
     height: 100px;
     width: 100%;
+    transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32)
   }
 
   .play-music-button-cut {
@@ -512,6 +553,31 @@
   .play-music-info-image div.playing {
     animation-play-state: paused;
     -webkit-animation-play-state: paused;
+  }
+  .fade-enter-active,
+  .fade-leave-active,
+  .content-enter-active,
+  .content-leave-active,
+  .image-active-active,
+  .image-leave-active,
+  .lyric-active-active,
+  .lyric-leave-active{
+    transition: all .5s;
+  }
+  .fade-enter-active .play-music-info-top,
+  .fade-leave-active .play-music-info-top,
+  .fade-enter-active .play-music-info-bottom,
+  .fade-leave-active .play-music-info-bottom{transition: all .5s cubic-bezier(0.86, 0.18, 0.82, 1.32);}
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+  .fade-enter .play-music-info-top,
+  .fade-leave-to .play-music-info-top{
+    transform: translate3d(0, -100px, 0)
+  }
+  .fade-enter .play-music-info-bottom,
+  .fade-leave-to .play-music-info-bottom{
+    transform: translate3d(0, 100px, 0)
   }
 
   @keyframes rotateImg {

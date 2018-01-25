@@ -9,32 +9,32 @@
 </template>
 
 <script>
-  import {mapActions} from 'vuex'
-  export default {
-    props: {
-      undeveloped: {
-        type: Boolean,
-        default: false
-      }
+import {mapActions} from 'vuex'
+export default {
+  props: {
+    undeveloped: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    ...mapActions({
+      Undeveloped: 'Undeveloped'
+    }),
+    Share () {
+      this.Undeveloped({
+        status: true
+      })
     },
-    methods: {
-      ...mapActions({
-        Undeveloped: 'Undeveloped'
-      }),
-      Share () {
-        this.Undeveloped({
-          status: true
-        })
-      },
-      Comment () {
-        this.Undeveloped({
-          status: true
-        })
-      },
-      favorite () {
-      }
+    Comment () {
+      this.Undeveloped({
+        status: true
+      })
+    },
+    favorite () {
     }
   }
+}
 </script>
 <style scoped>
   .favorite {
