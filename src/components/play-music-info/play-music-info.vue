@@ -72,7 +72,7 @@ export default {
       PLAY_MODE: 'playMode',
       playModeNum: 'playModeNum'
     }),
-    iconMode () {
+    iconMode () { //判断播放模式 来进行更改页面样式。
       return this.playModeNum % 3 === this.PLAY_MODE.sequence ? 'icon-xunhuanbofang'
         : this.playModeNum % 3 === this.PLAY_MODE.random ? 'icon-random'
           : 'icon-danquxunhuan'
