@@ -98,7 +98,7 @@
           <div class="play-music-info-handler">
             <i @click.stop="Mode" class="icon iconfont text-r" :class="iconMode"></i>
             <i class="icon iconfont icon-shangyishou text-r"></i>
-            <i class="icon iconfont" :class="PlayToggle"></i>
+            <i class="icon iconfont" :class="PlayToggle" @click="Pause"></i>
             <i class="icon iconfont icon-xiayishou text-l"></i>
             <i class="icon iconfont icon-menu text-l"></i>
           </div>
@@ -152,7 +152,8 @@
     },
     methods: {
       ...mapActions({
-        PLAY_MUSIC: 'PlayMusic'
+        PLAY_MUSIC: 'PlayMusic',
+        PlayStatus: 'PlayStatus'
       }),
       timeupdate (e) { //更新播放时间
         this.currentTime = e.target.currentTime
@@ -189,6 +190,7 @@
             status: true
           })
         }
+        console.log(this.playing)
       },
       PlayMusic (index, id) { //获取点击选中的播放
         this.PLAY_MUSIC({
@@ -199,7 +201,7 @@
     },
     watch: {
       processWidth (newWidth) {//监听设置播放的宽度
-        if (newWidth >= 0) {
+        if (newWidth > 0) {
           const processbarWidth = this.$refs.processDiv.clientWidth - progressBtnWidth
           const offsetWidth = newWidth * processbarWidth
           this.$refs.progress.style.width = `${offsetWidth}px`
@@ -411,7 +413,7 @@
   }
 
   .song-image {
-    margin: 3% 20%;
+    margin: 3% 10%;
     margin-bottom: 20px;
     animation: rotateImg 45s infinite linear;
   }
@@ -437,7 +439,7 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 150px;
+    height: 100px;
     width: 100%;
   }
 
