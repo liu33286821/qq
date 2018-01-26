@@ -55,27 +55,11 @@
               </div>
               <i class="icon iconfont icon-listmore"></i>
             </div>
-            <div class="play-music-info-center"
-                 @touchstart="TouchStart"
+            <div class="play-music-info-center"  @touchstart="TouchStart"
                  @touchmove="TouchMove"
-                 @touchend = "TouchEnd"
-            >
+                 @touchend = "TouchEnd">
               <transition name="content">
-                <div v-show="show % 3 === 0" class="play-music-info-content">
-                  <ul>
-                    <li>
-                      <div><img src=""/></div>
-                      <div><p>歌手：赵雷</p></div>
-                    </li>
-                    <li>
-                      <div><img src=""/></div>
-                      <div><p>专辑：十九岁</p></div>
-                    </li>
-                  </ul>
-                </div>
-              </transition>
-              <transition name="image">
-                <div v-show="show % 3 === 1" class="play-music-info-image">
+                <div v-show="show % 2 === 0" class="play-music-info-image">
                   <p>— {{lists[currentIndex].singer}} —</p>
                   <p>
                     <span>标准</span>
@@ -87,32 +71,37 @@
                   <div>
                     <p>歌词</p>
                   </div>
-                  <ul class="button-show">
-                    <li :class="{'active':show % 3 === 0 }"></li>
-                    <li :class="{'active':show % 3 === 1 }"></li>
-                    <li :class="{'active':show % 3 === 2 }"></li>
-                  </ul>
                 </div>
               </transition>
-              <transition name="lyric">
-                <div v-show="show % 3 === 2" class="play-music-info-lyric"></div>
+              <transition name="content">
+                <div v-show="show % 2 === 1" class="play-music-info-lyric">
+                  <p ref="lyricLine">暂无歌词</p>
+                </div>
               </transition>
+              <ul class="button-show">
+                <li :class="{'active':show % 2 === 0 }"></li>
+                <li :class="{'active':show % 2 === 1 }"></li>
+              </ul>
             </div>
             <div  class="play-music-info-bottom">
               <div class="play-music-info-time">
                 <span class="time-start">{{format(currentTime)}}</span>
                 <div class="process" ref="processDiv">
                   <div class="process-bar2" ref="progress"></div>
-                  <div class="process-bar-btn"  ref="progressBtn"></div>
+                  <div class="process-bar-btn"
+                       @touchstart.prevent="ProcessBtnTouchStart"
+                       @touchmove.prevent="ProcessBtnTouchMove"
+                       @touchend.prevent="ProcessBtnTouchEnd"
+                       ref="progressBtn"></div>
                 </div>
                 <span class="time-end">{{format(lists[currentIndex].interval)}}</span>
               </div>
               <div class="play-music-info-handler">
                 <i @click.stop="Mode" class="icon iconfont text-r" :class="iconMode"></i>
-                <i class="icon iconfont icon-shangyishou text-r"></i>
+                <i class="icon iconfont icon-shangyishou text-r" @click="Prev"></i>
                 <i class="icon iconfont" :class="PlayToggle" @click="Pause"></i>
-                <i class="icon iconfont icon-xiayishou text-l"></i>
-                <i class="icon iconfont icon-menu text-l"></i>
+                <i class="icon iconfont icon-xiayishou text-l" @click="Next"></i>
+                <i class="icon iconfont icon-menu text-l" @click="Show"></i>
               </div>
               <div class="play-music-info-button">
               </div>
@@ -124,6 +113,8 @@
            ref="Audio"
            :src="lists[currentIndex].mp3Url"
            @timeupdate="timeupdate"
+           @ended="end"
+           @ready="ready"
            autoplay></audio>
   </div>
 </template>
@@ -139,13 +130,18 @@ export default {
   data () {
     return {
       playModeName: ['单曲循环', '顺序播放', '随机播放'],
-      show: 1,  //滑动 0 1 2 显示3个页面
+      show: 0,  //滑动 0 1 显示2个页面
       currentTime: 0,
-      PlayMusicInfoShow: false
+      PlayMusicInfoShow: false,
+      currentLyric: null,
+      currentLyricNumber: 0,
+      playingLyric: '',
+      ready: false
     }
   },
   created () {
     this.touches = {} //用来保存滑动的变量
+    this.touch = {}   //用来保存歌曲时间滑动
   },
   computed: {
       ...mapGetters({
@@ -170,7 +166,12 @@ export default {
   methods: {
     ...mapActions({
       PLAY_MUSIC: 'PlayMusic',
-      PlayStatus: 'PlayStatus'
+      PlayStatus: 'PlayStatus',
+      ReduceCurrentIndex: 'ReduceCurrentIndex'
+    }),
+    ...mapMutations({
+      CURRENT_INDEX: 'CURRENT_INDEX',  //更改播放索引
+      PLAY_STATUS: 'PLAY_STATUS',     // 更改播放状态
     }),
     timeupdate (e) { //更新播放时间
         this.currentTime = e.target.currentTime
@@ -207,8 +208,41 @@ export default {
             status: true
           })
         }
-        console.log(this.playing)
       },
+    Next () {
+      let index = this.currentIndex + 1
+      if (index >= this.lists.length) {
+        index = 0
+      }
+      this.CURRENT_INDEX(index)
+      this.PLAY_STATUS(true)
+      this.ready = false
+    },
+    Prev () {
+      if (this.lists.length === 1) {
+        this.$refs.Audio.currentTime = 0
+        this.$refs.Audio.play()
+      } else {
+        let index = this.currentIndex - 1
+        if (index === -1) {
+          index = this.lists.length - 1
+        }
+        this.CURRENT_INDEX(index)
+      }
+      this.PLAY_STATUS(true)
+      this.ready = false
+    },
+    ready () {this.ready = true},
+    end () {
+      let index = this.currentIndex + 1
+      if (index >= this.lists.length) {
+        index = 0
+      }
+      this.CURRENT_INDEX(index)
+      this.PLAY_STATUS(true)
+      console.log('播放完毕')
+      console.log(this.currentIndex)
+    },
     PlayMusic (index, id) { //获取点击选中的播放
         this.PLAY_MUSIC({
           index: index,
@@ -235,8 +269,51 @@ export default {
       let MoveY = touch.pageY - this.touches.startY
       //滑动的时候 有可能从上向下滑动， 那么就需要返回 不就行任何操作 Math.abs() 返回绝对值， 如果说值为负数也会返回正值
       if (Math.abs(MoveY) > Math.abs(MoveX)) return
+      console.log(MoveX, MoveY, this.playModeNum)
+      /*
+      * 考虑到从中间滑动屏幕， 如果this.playModeNum 为1 并且 滑动的距离大于0 的话 那么就把 playModeNum 变为1
+      * 如果 playModeNum 为0  并且滑动距离大于0 不做任何操作， 否则的话playModeNum 等于1
+      * 如果当前playMode为1  并且滑动距离大于0的话 那么playModeNum为2
+      * 如果playModeNum 为2  并且滑动距离大于0的话 不做任何操作 否则的话 playModeNum 等于1
+      * */
+      if (this.show === 1 && MoveX > 0) {
+        this.show = 0
+      }
+      if (this.show === 0 && MoveX < 0) {
+        this.show = 1
+      }
     },
-    TouchEnd (e) {}
+    TouchEnd (e) {},
+    ProcessBtnTouchStart (e) {
+      const touch = e.touches[0]
+      this.touch.initated = true
+      this.touch.startX = touch.pageX
+      this.touch.left = this.$refs.progress.clientWidth  //当前圆点距离左边的位置。
+      this.$refs.Audio.pause()
+      this.PlayStatus({
+        status: false
+      })
+    },
+    ProcessBtnTouchMove (e) {
+      if (!this.touch.initated) return
+      const delaX = e.touches[0].pageX - this.touch.startX
+      const offsetWidth = Math.min(this.$refs.processDiv.clientWidth - progressBtnWidth, Math.max(0, this.touch.left + delaX))
+      this.$refs.progress.style.width = `${offsetWidth}px`
+      this.$refs.progressBtn.style['transform'] = `translate3d(${offsetWidth}px,0,0)`
+    },
+    ProcessBtnTouchEnd (e) {
+      this.touch.initated = false
+      const barWidth = this.$refs.processDiv.clientWidth - progressBtnWidth
+      const precent = this.$refs.progress.clientWidth / barWidth
+      console.log(barWidth, precent, this.$refs.processDiv.clientWidth)
+      const currentTime = this.lists[this.currentIndex].interval * precent
+      console.log(this.currentTime)
+      this.$refs.Audio.currentTime = currentTime
+      this.$refs.Audio.play()
+      this.PlayStatus({
+        status: true
+      })
+    },
   },
   watch: {
     processWidth (newWidth) {//监听设置播放的宽度
@@ -344,7 +421,12 @@ export default {
   }
 
   .active span {
-    color: #31c27c
+    color: #31c27c;
+    display: inline-block;
+    width: 68%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .smt_left > div {
@@ -412,6 +494,13 @@ export default {
     text-align: center;
     margin: 0 40px;
   }
+  .play-music-info-title span{
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+  }
 
   .play-music-info-center {
     position: fixed;
@@ -453,14 +542,17 @@ export default {
   }
 
   .song-image {
-    margin: 3% 10%;
-    margin-bottom: 20px;
+    margin: 4% 10% 5%;
     animation: rotateImg 45s infinite linear;
   }
 
   .button-show {
     width: 100%;
     display: inline-block;
+    position: absolute;
+    bottom: 140px;
+    z-index: 100;
+    left: 0;
   }
 
   .button-show li {
@@ -557,18 +649,17 @@ export default {
   .fade-enter-active,
   .fade-leave-active,
   .content-enter-active,
-  .content-leave-active,
-  .image-active-active,
-  .image-leave-active,
-  .lyric-active-active,
-  .lyric-leave-active{
+  .content-leave-active{
     transition: all .5s;
   }
+
+  .content-enter-active .content{}
   .fade-enter-active .play-music-info-top,
   .fade-leave-active .play-music-info-top,
   .fade-enter-active .play-music-info-bottom,
   .fade-leave-active .play-music-info-bottom{transition: all .5s cubic-bezier(0.86, 0.18, 0.82, 1.32);}
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .fade-enter, .fade-leave-to,
+  .content-enter, .content-leave-to {
     opacity: 0;
   }
   .fade-enter .play-music-info-top,

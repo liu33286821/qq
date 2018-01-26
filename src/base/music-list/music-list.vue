@@ -20,7 +20,9 @@
 
 <script>
 import MusicCommonTitle from '@/base/music-common-title/music-common-title'
+import {getPlayMusic} from '@/api/api'
 import {mapActions} from 'vuex'
+import {Base64} from 'js-base64'
 export default {
   components: {MusicCommonTitle},
   props: {
@@ -38,18 +40,25 @@ export default {
       PlayMusicList: 'PlayMusicList'
     }),
     getMusicId (item) {
-      let ImgUrl = `http://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albummid}.jpg`
-      var data = {
-        id: item.songid,
-        singer: item.singer,
-        songmid: item.songmid,
-        songname: item.songname,
-        songImage: ImgUrl,
-        interval: item.interval
-      }
-      this.PlayMusicList({
-        music: data,
-        playing: true
+      var lyric
+      getPlayMusic(item.songid).then((res) => {
+        lyric = res.lyric
+        this.$nextTick(() => {
+          let ImgUrl = `http://y.gtimg.cn/music/photo_new/T002R150x150M000${item.albummid}.jpg`
+          var data = {
+            id: item.songid,
+            singer: item.singer,
+            songmid: item.songmid,
+            songname: item.songname,
+            songImage: ImgUrl,
+            interval: item.interval,
+            lyric: lyric
+          }
+          this.PlayMusicList({
+            music: data,
+            playing: true
+          })
+        })
       })
     }
   }

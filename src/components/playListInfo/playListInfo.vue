@@ -99,7 +99,7 @@ export default {
         lists.forEach(function (item, index) {
           _this.cdList.songlist[index].singer = SingerNameSort(item.singer)
         })
-        console.log(this.cdList.songlist)
+        //console.log(this.cdList.songlist)
       })
     },
     getBgHeight () {  //屏幕测试拉伸的话  页面大小会不一致。 所以需要根据屏幕的宽度来进行改变
