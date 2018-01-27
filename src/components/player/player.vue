@@ -16,6 +16,7 @@
               <div @click.stop="Mode">
                 <span ref="IconMode"><i :class="iconMode"></i></span>
                 <span>{{playModeName[playModeNum % 3]}}</span>
+                <span>{{lists.length}}</span>
               </div>
             </div>
             <div><i class="icon iconfont icon-xiazai"></i></div>
@@ -102,7 +103,7 @@
                 <div class="text-r">
                   <i class="icon iconfont icon-shangyishou" @click="Prev"></i>
                 </div>
-                <div>
+                <div id="pause">
                   <i class="icon iconfont" :class="PlayToggle" @click="Pause"></i>
                 </div>
                 <div class="text-l">
@@ -201,7 +202,6 @@ export default {
       this.timer = setTimeout(() => {
         this.$refs.PlayModeShow.style['transform'] = `translate3d(0,-30px,0)`
       }, 1000)
-
     },
     Close () { //关闭播放页面
         this.$refs.scrollDiv2.style.transform = 'translate3d(0,100%,0)'
@@ -220,7 +220,7 @@ export default {
           this.PLAY_STATUS(false)
         } else {
           audio.play()
-          this.PlayStatus(true)
+          this.PLAY_STATUS(true)
         }
       },
     loop () {
@@ -256,9 +256,10 @@ export default {
     },
     end () {
       this.PLAY_STATUS(false) //播放暂停。
-      if (this.playModeNum === 0 || this.lists.length === 1) {  //单曲循环模式
+      if (this.playModeNum % 3 === 0 || this.lists.length === 1) {  //单曲循环模式
         this.$refs.Audio.currentTime = 0
         this.$refs.Audio.play()
+        return
       }
       let index = this.currentIndex + 1
       if (index === this.lists.length) {
@@ -395,7 +396,13 @@ export default {
   .scroll-div2 li small {
     font-size: 12px
   }
-
+  .scroll-div2 li span:first-child{
+    width: 70%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .scroll-music-title .icon {
     font-size: 20px;
     vertical-align: middle;
@@ -623,9 +630,8 @@ export default {
   .play-music-info-handler .icon-play-circle,
   .play-music-info-handler .icon-zanting {
     font-size: 40px;
-    text-align: center;
-    padding: 0 20px;
   }
+  #pause{text-align: center; padding: 0 20px;}
 
   .play-music-info-time {
     display: flex;

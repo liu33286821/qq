@@ -29,11 +29,3 @@ export const SongMusic = {
   uin: '',
   fromtag: '999'
 }
-
-//歌词属性
-export const LyricType = Object.assign({}, commonType, {
-  nobase64: 1,
-  songtype: 0,
-  _: 1516945823371,
-  jsonpCallback: 'jsonp1'
-})

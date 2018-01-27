@@ -72,6 +72,7 @@ export default {
     height: 100%;
     bottom: 0;
     padding-bottom: 60px;
+    background: #fff;
   }
   .scroll{
     height: 100%;

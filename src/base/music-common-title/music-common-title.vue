@@ -2,7 +2,7 @@
   <div id="music-list-title" :class="{'show-common-title':TopTitle}">
     <div id="play-icon">
       <ul>
-        <li><i class="icon iconfont icon-play-circle"></i>全部播放<span>共{{lists.length}}首</span></li>
+        <li @click="allMusic"><i class="icon iconfont icon-play-circle"></i>全部播放<span>共{{lists.length}}首</span></li>
         <li><i class="icon iconfont icon-download"></i>下载</li>
         <li><i class="icon iconfont icon-list"></i>多选</li>
       </ul>
@@ -20,6 +20,11 @@ export default {
     TopTitle: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    allMusic () {
+      this.$emit('allMusic')
     }
   }
 }
