@@ -28,8 +28,7 @@
                 <ul>
                   <li v-for="list,index in lists"
                       :class="{'active': index === currentIndex}"
-                      @click="PlayMusic(index,list.id)"
-                  >
+                      @click="PlayMusic(index,list.id)">
                     <span>{{list.songname}}<small> - {{list.singer}}</small></span>
                     <i class="icon iconfont icon-favorite-outline"></i>
                     <i class="icon iconfont icon-add"></i>
@@ -97,11 +96,21 @@
                 <span class="time-end">{{format(lists[currentIndex].interval)}}</span>
               </div>
               <div class="play-music-info-handler">
-                <i @click.stop="Mode" class="icon iconfont text-r" :class="iconMode"></i>
-                <i class="icon iconfont icon-shangyishou text-r" @click="Prev"></i>
-                <i class="icon iconfont" :class="PlayToggle" @click="Pause"></i>
-                <i class="icon iconfont icon-xiayishou text-l" @click="Next"></i>
-                <i class="icon iconfont icon-menu text-l" @click="Show"></i>
+                <div class="text-r">
+                  <i @click.stop="Mode" class="icon iconfont" :class="iconMode"></i>
+                </div>
+                <div class="text-r">
+                  <i class="icon iconfont icon-shangyishou" @click="Prev"></i>
+                </div>
+                <div>
+                  <i class="icon iconfont" :class="PlayToggle" @click="Pause"></i>
+                </div>
+                <div class="text-l">
+                  <i class="icon iconfont icon-xiayishou" @click="Next"></i>
+                </div>
+                <div class="text-l">
+                  <i class="icon iconfont icon-menu" @click="Show"></i>
+                </div>
               </div>
               <div class="play-music-info-button">
               </div>
@@ -114,8 +123,8 @@
            :src="lists[currentIndex].mp3Url"
            @timeupdate="timeupdate"
            @ended="end"
-           @ready="ready"
            autoplay></audio>
+    <div id="play-mode-show" ref="PlayModeShow"><p>已选中{{playModeName[playModeNum%3]}}</p></div>
   </div>
 </template>
 
@@ -136,7 +145,8 @@ export default {
       currentLyric: null,
       currentLyricNumber: 0,
       playingLyric: '',
-      ready: false
+      ready: false,
+      timer: null
     }
   },
   created () {
@@ -166,12 +176,12 @@ export default {
   methods: {
     ...mapActions({
       PLAY_MUSIC: 'PlayMusic',
-      PlayStatus: 'PlayStatus',
       ReduceCurrentIndex: 'ReduceCurrentIndex'
     }),
     ...mapMutations({
       CURRENT_INDEX: 'CURRENT_INDEX',  //更改播放索引
       PLAY_STATUS: 'PLAY_STATUS',     // 更改播放状态
+      PLAY_MODE_NUM: 'PLAY_MODE_NUM',
     }),
     timeupdate (e) { //更新播放时间
         this.currentTime = e.target.currentTime
@@ -183,8 +193,16 @@ export default {
         return `${minute}:${second}`
       },
     Mode () {//监听了播放模式的循环
-        this.$store.dispatch('PlayModeNum')
-      },
+      this.PLAY_MODE_NUM()
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.$refs.PlayModeShow.style['transform'] = `translate3d(0,0,0)`
+      this.timer = setTimeout(() => {
+        this.$refs.PlayModeShow.style['transform'] = `translate3d(0,-30px,0)`
+      }, 1000)
+
+    },
     Close () { //关闭播放页面
         this.$refs.scrollDiv2.style.transform = 'translate3d(0,100%,0)'
         this.$refs.scrollDiv.style.opacity = '0'
@@ -199,19 +217,23 @@ export default {
         let audio = this.$refs.Audio
         if (!audio.paused) {
           audio.pause()
-          this.PlayStatus({
-            status: false
-          })
+          this.PLAY_STATUS(false)
         } else {
           audio.play()
-          this.PlayStatus({
-            status: true
-          })
+          this.PlayStatus(true)
         }
       },
+    loop () {
+      this.$refs.Audio.currentTime = 0
+      this.$refs.Audio.play()
+    },
     Next () {
+      if (this.lists.length === 1) {
+        this.$refs.Audio.currentTime = 0
+        this.$refs.Audio.play()
+      }
       let index = this.currentIndex + 1
-      if (index >= this.lists.length) {
+      if (index === this.lists.length) {
         index = 0
       }
       this.CURRENT_INDEX(index)
@@ -232,16 +254,18 @@ export default {
       this.PLAY_STATUS(true)
       this.ready = false
     },
-    ready () {this.ready = true},
     end () {
+      this.PLAY_STATUS(false) //播放暂停。
+      if (this.playModeNum === 0 || this.lists.length === 1) {  //单曲循环模式
+        this.$refs.Audio.currentTime = 0
+        this.$refs.Audio.play()
+      }
       let index = this.currentIndex + 1
-      if (index >= this.lists.length) {
+      if (index === this.lists.length) {
         index = 0
       }
       this.CURRENT_INDEX(index)
       this.PLAY_STATUS(true)
-      console.log('播放完毕')
-      console.log(this.currentIndex)
     },
     PlayMusic (index, id) { //获取点击选中的播放
         this.PLAY_MUSIC({
@@ -269,7 +293,7 @@ export default {
       let MoveY = touch.pageY - this.touches.startY
       //滑动的时候 有可能从上向下滑动， 那么就需要返回 不就行任何操作 Math.abs() 返回绝对值， 如果说值为负数也会返回正值
       if (Math.abs(MoveY) > Math.abs(MoveX)) return
-      console.log(MoveX, MoveY, this.playModeNum)
+      //console.log(MoveX, MoveY, this.playModeNum)
       /*
       * 考虑到从中间滑动屏幕， 如果this.playModeNum 为1 并且 滑动的距离大于0 的话 那么就把 playModeNum 变为1
       * 如果 playModeNum 为0  并且滑动距离大于0 不做任何操作， 否则的话playModeNum 等于1
@@ -290,9 +314,7 @@ export default {
       this.touch.startX = touch.pageX
       this.touch.left = this.$refs.progress.clientWidth  //当前圆点距离左边的位置。
       this.$refs.Audio.pause()
-      this.PlayStatus({
-        status: false
-      })
+      this.PLAY_STATUS(false)
     },
     ProcessBtnTouchMove (e) {
       if (!this.touch.initated) return
@@ -305,14 +327,12 @@ export default {
       this.touch.initated = false
       const barWidth = this.$refs.processDiv.clientWidth - progressBtnWidth
       const precent = this.$refs.progress.clientWidth / barWidth
-      console.log(barWidth, precent, this.$refs.processDiv.clientWidth)
+      //console.log(barWidth, precent, this.$refs.processDiv.clientWidth)
       const currentTime = this.lists[this.currentIndex].interval * precent
-      console.log(this.currentTime)
+      //console.log(this.currentTime)
       this.$refs.Audio.currentTime = currentTime
       this.$refs.Audio.play()
-      this.PlayStatus({
-        status: true
-      })
+      this.PLAY_STATUS(true)
     },
   },
   watch: {
@@ -585,10 +605,9 @@ export default {
     padding: 0 20px;
     display: flex;
   }
-
+  .play-music-info-handler>div{flex: 1}
   .play-music-info-handler .icon {
     font-size: 24px;
-    flex: 1;
     vertical-align: middle;
     line-height: 30px;
   }
@@ -678,6 +697,23 @@ export default {
     to {
       transform: rotate(360deg)
     }
+  }
+
+  #play-mode-show{
+    position: fixed;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    padding: 5px 0;
+    height: 30px;
+    text-align: left;
+    background: #31c27c;
+    line-height: 20px;
+    font-size: 12px;
+    text-indent: 20px;
+    color: #fff;
+    transition: all .5s;
+    transform: translate3d(0,-30px,0);
   }
 
   @media screen and (-webkit-min-device-pixel-ratio: 2) {

@@ -12,10 +12,3 @@ export const PlayMusicList = function ({commit}, {music, playing}) { //歌曲播
 export const PlayMusic = function ({commit}, {index, id}) {  //播放音乐
   commit(types.PLAY_LIST, {index, id})
 }
-
-export const PlayStatus = function ({commit}, {status}) { //播放状态  暂停  开始
-  commit(types.PLAY_STATUS, status)
-}
-export const PlayModeNum = function ({commit}) { //播放模式切换
-  commit(types.PLAY_MODE_NUM)
-}

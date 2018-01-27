@@ -36,7 +36,6 @@ const mutations = {
   },
   [types.PLAY_MODE_NUM] (state) {  //播放模式
     state.playModeNum++
-    console.log(state.playModeNum)
   },
   [types.CURRENT_INDEX] (state, index) { //歌曲索引更改
     state.currentIndex = index
