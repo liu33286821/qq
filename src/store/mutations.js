@@ -1,4 +1,6 @@
 import * as types from './mutations-types'
+import {unqiueObject} from '@/api/common'
+
 const mutations = {
   [types.SET_ERROR_INFO] (state, status) {
     state.errorInfo.status = status
@@ -13,15 +15,11 @@ const mutations = {
       if (length < 1) {
         state.PlayMusicList = music
       } else {
-        for (var i = 0; i < state.PlayMusicList.length; i++) {
-          for (let b = 0; b < music.length; b++) {
-            if (state.PlayMusicList[i].id !== music[b].id) {
-              console.log(i)
-            }
-          }
+        for (let b = 0; b < music.length; b++) {
+          List.push(music[b])
         }
+        state.PlayMusicList = unqiueObject(List, ['id', 'songImage'])
       }
-      state.currentIndex = length
     } else {
       state.currentIndex = List.length - 1 < 0 ? 0 : List.length
       music.mp3Url = `http://isure.stream.qqmusic.qq.com/C100${music.songmid}.m4a?fromtag=32`
@@ -57,6 +55,13 @@ const mutations = {
   },
   [types.CURRENT_INDEX] (state, index) { //歌曲索引更改
     state.currentIndex = index
-  }
+  },
+  [types.REMOVE] (state, list) { //删除当前歌曲
+    if (list instanceof Array) {
+      state.PlayMusicList = []
+    } else {
+      state.PlayMusicList.splice(list, 1)
+    }
+  },
 }
 export default mutations

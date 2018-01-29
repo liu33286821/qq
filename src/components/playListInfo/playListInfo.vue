@@ -23,10 +23,11 @@
               <div class="music-title-bg" ref="musicTitleBg" :style="{backgroundImage:`url(${cdList.logo})`}"></div>
               <div class="music-title-con clearfix" ref="musciTitleCon">
                 <div class="music-title-l">
-                  <img :src="cdList.logo" ref="musicTitleImage"  width="100%" height="100%"/>
-                  <div class="music-title-l-bottom">
-                    <p><i class="icon iconfont icon-toudaierji"></i><span>{{PlayNum}}</span></p>
-                  </div>
+                  <music-common-image :Image="cdList.logo" ref="musicTitleImage" :PlayBack="PlayBack" :PlayNum="PlayNum"></music-common-image>
+                  <!--<img :src="cdList.logo" ref="musicTitleImage"  width="100%" height="100%"/>-->
+                  <!--<div class="music-title-l-bottom">-->
+                    <!--<p><i class="icon iconfont icon-toudaierji"></i><span>{{PlayNum}}</span></p>-->
+                  <!--</div>-->
                 </div>
                 <div class="music-title-r">
                   <h2>{{cdList.dissname}}</h2>
@@ -50,12 +51,13 @@ import Favorite from '@/base/favorite/favorite'
 import errorInfo from '@/base/error-info/error-info'
 import MusicList from '@/base/music-list/music-list'
 import MusicCommonTitle from '@/base/music-common-title/music-common-title'
+import MusicCommonImage from '@/base/music-common-image/music-common-image'
 import {mapGetters} from 'vuex'
 import {SingerNameSort} from '@/api/common'
 const PaddingHeight = 130
 const OPACITY = 1
 export default {
-  components: {Scroll, Favorite, errorInfo, MusicList, MusicCommonTitle},
+  components: {Scroll, Favorite, errorInfo, MusicList, MusicCommonTitle, MusicCommonImage},
   data () {
     return {
       cdList: null,
@@ -63,7 +65,8 @@ export default {
       scrollY: 0,
       opacity: 1,
       showCommonTitle: false,
-      bottom: 0
+      bottom: 0,
+      PlayBack: true
     }
   },
   computed: {
@@ -255,21 +258,6 @@ export default {
     -webkit-box-orient:vertical;
     overflow:hidden;
     line-height: 20px;
-  }
-  .music-title-l-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    text-align: left;
-    line-height: 40px;
-    padding-left: 10px;
-  }
-  .icon-toudaierji{
-    margin-right: 4px;
-    vertical-align: middle;
-    font-size: 15px;
   }
   .music-title-l-bottom span{
     vertical-align: middle;

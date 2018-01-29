@@ -5,8 +5,7 @@
         <ul class="clearfix">
           <li v-for="item in lists.list" @click="getInfo(item.content_id)">
             <div>
-              <img class="edge_mark" v-if="item.edge_mark" :src="item.edge_mark"/>
-              <img class="list-cover" :src="item.cover"/>
+              <music-common-image :Image="item.cover" :newImage="item.edge_mark"></music-common-image>
             </div>
             <p class="list-title" v-html="item.title"></p>
           </li>
@@ -17,8 +16,9 @@
 
 <script>
 import Scroll from '@/base/scroll/scroll.vue'
+import MusicCommonImage from '@/base/music-common-image/music-common-image'
 export default {
-  components: {Scroll},
+  components: {Scroll, MusicCommonImage},
   props: {
     lists: {  //从父组件传递过来的值
       type: Object,

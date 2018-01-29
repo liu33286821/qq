@@ -3,7 +3,7 @@
     <div id="play-icon">
       <ul>
         <li @click="allMusic"><i class="icon iconfont icon-play-circle"></i>全部播放<span>共{{lists.length}}首</span></li>
-        <li><i class="icon iconfont icon-download"></i>下载</li>
+        <li><i class="icon iconfont icon-xiazai"></i>下载</li>
         <li><i class="icon iconfont icon-list"></i>多选</li>
       </ul>
     </div>

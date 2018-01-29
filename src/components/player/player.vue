@@ -21,7 +21,7 @@
             </div>
             <div><i class="icon iconfont icon-xiazai"></i></div>
             <div><i class="icon iconfont icon-tianjia"></i></div>
-            <div><i class="icon iconfont icon-lajixiang"></i></div>
+            <div><i class="icon iconfont icon-lajixiang" @click.stop="remove(lists)"></i></div>
           </div>
           <div class="scroll-list">
             <scroll ref="scroll">
@@ -31,8 +31,8 @@
                       :class="{'active': index === currentIndex}"
                       @click="PlayMusic(index,list.id)">
                     <span>{{list.songname}}<small> - {{list.singer}}</small></span>
+                    <i class="icon iconfont icon-close" @click.stop="remove(index)"></i>
                     <i class="icon iconfont icon-favorite-outline"></i>
-                    <i class="icon iconfont icon-add"></i>
                   </li>
                 </ul>
               </Div>
@@ -183,6 +183,8 @@ export default {
       CURRENT_INDEX: 'CURRENT_INDEX',  //更改播放索引
       PLAY_STATUS: 'PLAY_STATUS',     // 更改播放状态
       PLAY_MODE_NUM: 'PLAY_MODE_NUM',
+      PLAYING: 'PLAYING',
+      REMOVE: 'REMOVE'
     }),
     timeupdate (e) { //更新播放时间
         this.currentTime = e.target.currentTime
@@ -228,15 +230,21 @@ export default {
       this.$refs.Audio.play()
     },
     Next () {
-      if (this.lists.length === 1) {
+      if (this.lists.length === 1) {  //如果只有一首歌
         this.$refs.Audio.currentTime = 0
         this.$refs.Audio.play()
       }
-      let index = this.currentIndex + 1
-      if (index === this.lists.length) {
-        index = 0
+      if (this.playModeNum % 3 === 2) {  //只有当等于随机模式的才会走这里。  否则的话按顺序播放
+        let index = Math.max(0, Math.ceil(Math.random() * this.lists.length))
+        console.log(index)
+        this.CURRENT_INDEX(index)
+      } else {
+        let index = this.currentIndex + 1
+        if (index === this.lists.length) {
+          index = 0
+        }
+        this.CURRENT_INDEX(index)
       }
-      this.CURRENT_INDEX(index)
       this.PLAY_STATUS(true)
       this.ready = false
     },
@@ -259,14 +267,14 @@ export default {
       if (this.playModeNum % 3 === 0 || this.lists.length === 1) {  //单曲循环模式
         this.$refs.Audio.currentTime = 0
         this.$refs.Audio.play()
+        this.PLAY_STATUS(true)
         return
       }
-      let index = this.currentIndex + 1
-      if (index === this.lists.length) {
-        index = 0
-      }
-      this.CURRENT_INDEX(index)
-      this.PLAY_STATUS(true)
+      this.Next()
+    },
+    remove (list) {
+      this.REMOVE(list)
+      this.PLAY_STATUS(false)
     },
     PlayMusic (index, id) { //获取点击选中的播放
         this.PLAY_MUSIC({
@@ -334,7 +342,7 @@ export default {
       this.$refs.Audio.currentTime = currentTime
       this.$refs.Audio.play()
       this.PLAY_STATUS(true)
-    },
+    }
   },
   watch: {
     processWidth (newWidth) {//监听设置播放的宽度
@@ -720,6 +728,23 @@ export default {
     color: #fff;
     transition: all .5s;
     transform: translate3d(0,-30px,0);
+  }
+
+  .remove{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.3);
+    z-index:1001;
+    display: none;
+  }
+  .remove-content{
+    width: 60%;
+    height: 200px;
+    background: #fff;
+    border-radius: 10px;
   }
 
   @media screen and (-webkit-min-device-pixel-ratio: 2) {

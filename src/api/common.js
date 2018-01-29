@@ -16,6 +16,25 @@ export function RandomList (arr) {
   if (arr.length <= 1) return
   var list = []
 }
-export function unqiue (arr) {
+export function unqiueObject (array, keys) {
   //在使用ES6 语法去重的时候。里面的object对象。 不能去除重复。  在网上查询 引用类型的问题，所以需要自己手写了
+  var arr = []
+  var hash = {}
+  for (let i = 0; i < array.length; i++) {
+    var k = unqiueStr(array[i], keys)
+    if (!(k in hash)) {
+      hash[k] = true
+      arr.push(array[i])
+    }
+  }
+  return arr
+}
+
+function unqiueStr (obj, keys) {
+  var n = keys.length,
+    key = []
+  while (n--) {
+    key.push(obj[keys[n]])
+  }
+  return key.join('|')
 }

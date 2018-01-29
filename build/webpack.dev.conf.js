@@ -95,11 +95,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
             console.log(error)
           })
 
+        }),
+        app.get('/api/getTopList',function (req,res) {
+          var url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg'
+          axios.get(url,{
+            params: req.query
+          }).then((response) => {
+            res.json(response)
+          })
         })
-      app.get('/api/getMp4',function (req,res) {
-        let url = 'http://cn-jszj-dx-v-06.acgvideo.com/vg4/e/56/preview_27863773-1-16.mp4?expires=1517038800&platform=html5&ssig=Dzy4WdxFyQdCX3b1DeM89g&oi=3026726143&stime=0&etime=360&nfa=lzuRTh2AZPjewgHtRiRHcw==&dynamic=1&hfa=2019494046&hfb=M2Y2ZWYwZjM2YmRiYmY5MDljYTBiOWE2ZmEwYjJmYTM='
-
-      })
     }
   },
   plugins: [

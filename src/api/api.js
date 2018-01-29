@@ -14,3 +14,15 @@ export function getPlayListInfo (disstid) {
     console.log('连接不可用了。')
   })
 }
+
+export function getTopList () {
+  const url = '/api/getTopList'
+  const data = Object.assign({}, commonType)
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  }).catch(() => {
+    console.log('连接不可用了。')
+  })
+}
