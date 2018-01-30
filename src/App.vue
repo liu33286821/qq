@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style>
+<style type="text/css">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -23,4 +23,12 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+  .index-enter-active,
+  .index-leave-active {
+    transition: all .5s;
+    position: relative;
+  }
+  .index-leave-to{
+    transform: translate3d(-100%, 0, 0);
+  }
 </style>

@@ -51,6 +51,7 @@ export default {
     flex: 1;
     line-height: 24px;
     font-size: 14px;
+    text-align: center;
   }
   .icon{margin-right: 10px;vertical-align: middle}
   .iconfont{font-size: 24px}

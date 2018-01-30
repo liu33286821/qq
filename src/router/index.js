@@ -5,6 +5,8 @@ import My from '@/components/my/my'
 import Find from '@/components/find/find'
 import PlayList from '@/components/playlist/playlist'
 import PlayListInfo from '@/components/playListInfo/playListInfo'
+import TopList from '@/components/top-list/top-list'
+import TopListInfo from '@/base/top-list-info/top-list-info'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +38,16 @@ export default new Router({
     {
       path: '/playlist/:id',
       component: PlayListInfo
+    },
+    {
+      path: '/toplist',
+      component: TopList,
+      children: [
+        {
+          path: ':id',
+          component: TopListInfo
+        }
+      ]
     }
   ]
 })

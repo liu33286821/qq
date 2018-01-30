@@ -97,7 +97,8 @@ export default {
   header nav a{
     flex: 1;
     color: #fff;
-    transition: all .5s;
+    text-align: center;
+    transition: all .2s;
   }
   header nav a.router-link-exact-active{
     font-size: 18px;
@@ -142,6 +143,7 @@ export default {
     background: #31c27c;
     padding: 5px;
     color: #fff;
+    text-align: center;
   }
   #index-search p{
     width: 100%;

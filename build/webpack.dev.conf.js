@@ -96,14 +96,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           })
 
         }),
-        app.get('/api/getTopList',function (req,res) {
+      app.get('/api/getTopList',function (req,res) {
           var url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg'
           axios.get(url,{
             params: req.query
           }).then((response) => {
-            res.json(response)
+            res.json(response.data)
           })
+        }),
+      app.get('/api/getTopList/:id',function (req,res) {
+        const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg'
+        axios.get(url, {
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
         })
+      })
     }
   },
   plugins: [

@@ -36,6 +36,7 @@ export default {
   .index-list-title{
     line-height: 40px;
     padding-bottom: 10px;
+    text-align: center;
   }
   .icon-more_circle{
     float: right;

@@ -2,7 +2,7 @@
     <div class="index-nav">
       <ul>
         <router-link tag="li" to="/"><i class="icon iconfont icon-user1"></i><span>歌手</span></router-link>
-        <router-link tag="li" to="/"><i class="icon iconfont icon-msnui-bar-chart"></i><span>排行</span></router-link>
+        <router-link tag="li" to="/toplist"><i class="icon iconfont icon-msnui-bar-chart"></i><span>排行</span></router-link>
         <router-link tag="li" to="/"><i class="icon iconfont icon-diantai"></i><span>电台</span></router-link>
       </ul>
       <ul>

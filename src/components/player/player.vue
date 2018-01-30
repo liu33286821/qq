@@ -277,14 +277,14 @@ export default {
       this.PLAY_STATUS(false)
     },
     PlayMusic (index, id) { //获取点击选中的播放
-        this.PLAY_MUSIC({
-          index: index,
-          id: id
-        })
-      },
+      this.PLAY_MUSIC({
+        index: index,
+        id: id
+      })
+    },
     PlayInfoHide () { //播放详情页面隐藏
-        this.PlayMusicInfoShow = false
-      },
+      this.PlayMusicInfoShow = false
+    },
     PlayInfoShow () { //播发详情页面显示
       this.PlayMusicInfoShow = true
     },

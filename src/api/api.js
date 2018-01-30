@@ -26,3 +26,18 @@ export function getTopList () {
     console.log('连接不可用了。')
   })
 }
+
+export function getTopListInfo (id) {
+  console.log(id)
+  const url = `/api/getTopList/${id}`
+  const data = Object.assign({}, commonType, {
+    type: 'top',
+    tpl: 3,
+    topid: id
+  })
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
