@@ -20,8 +20,19 @@
         </ul>
       </div>
       <div class="top-list-content" ref="tlcContent">
-        <div v-if="Active === 1" class="tlc-music"></div>
         <div v-if="Active === 0" class="tlc-content" v-html="Info.info"></div>
+        <div v-if="Active === 1" class="tlc-music">
+          <music-common-title :lists="List"></music-common-title>
+          <ul>
+            <li v-for="(item,index) in List">
+              <div class="tlc-index">{{index}}</div>
+              <div>
+                <p>{{item.data.songname}}</p>
+                <p>{{item.data.singer}}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </transition>
@@ -30,6 +41,8 @@
 
 <script>
 import {getTopListInfo} from '@/api/api'
+import {SingerNameSort} from '@/api/common'
+import MusicCommonTitle from '@/base/music-common-title/music-common-title'
 export default {
   name: '',
   data () {
@@ -41,6 +54,7 @@ export default {
       timer: null
     }
   },
+  components: {MusicCommonTitle},
   created () {
   },
   mounted () {
@@ -55,7 +69,12 @@ export default {
         this.Info = res.topinfo
         this.List = res.songlist
         this.Info.date = res.date
-        console.log(this.Info)
+        const _this = this
+        this.List.forEach(function (item, index) {
+          console.log(item.data)
+          _this.List.data[index].singer = SingerNameSort(item.data.singer)
+        })
+        console.log(this.List)
       })
     },
     ShowPage (e) {
@@ -68,7 +87,7 @@ export default {
         this.Active = 1
       }
       for (var i = 0; i < children.length; i++) {
-        if (children[i].getAttribute('class') === 'active') {
+        if (children[i].className) {
           console.log(i)
           let rotateI = children[i].children[1]
           rotateI.style.left = `${e.layerX - rotateI.clientWidth / 2}px`
@@ -170,5 +189,12 @@ export default {
       opacity: 0.0;
       transform: scale(2,2);
     }
+  }
+  .tlc-content{
+    font-size: 14px;
+    padding: 15px;
+    text-align: left;
+    line-height: 24px;
+    color: #999;
   }
 </style>
