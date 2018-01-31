@@ -51,12 +51,11 @@ export default {
     this.clientHeight()
   },
   methods: {
-    getData () {  //x需要在create生命周期内部调用获取数据。
+    getData () {
       getTopList().then((res) => {
         if (res.code === 0) {
           console.log(res.data)
           this.List = res.data.topList
-          //id  picUrl  songList topTitle
         }
       })
     },
@@ -68,11 +67,6 @@ export default {
     },
     clientHeight () { //这个函数在其created调用的时候。 获取不到$refs 只能在mounted中调用获取$refs
       this.$refs.TopListContent.style.paddingBottom = `${Height}px`
-    }
-  },
-  watch: {
-    newY () {
-      console.log('改变了')
     }
   }
 }

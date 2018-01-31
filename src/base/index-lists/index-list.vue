@@ -75,8 +75,9 @@ export default {
     -webkit-line-clamp:2;
     -webkit-box-orient:vertical;
     overflow:hidden;
-    line-height: 24px;
-    height: 48px;
+    line-height: 20px;
+    height: 40px;
     text-align: left;
+    padding: 0 4px;
   }
 </style>
