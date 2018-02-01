@@ -11,6 +11,7 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
 export default {
   props: {
     lists: {
@@ -20,11 +21,35 @@ export default {
     TopTitle: {
       type: Boolean,
       default: false
+    },
+    ImageSize: {
+      type: Number,
+      default: 150
     }
   },
   methods: {
+    ...mapActions({
+      PlayMusicList: 'PlayMusicList'
+    }),
     allMusic () {
-      this.$emit('allMusic')
+      var arr = []
+      console.log(this.lists[0])
+      for (let item = 0; item < this.lists.length; item++) {
+        let ImgUrl = `http://y.gtimg.cn/music/photo_new/T002R${this.ImageSize}x${this.ImageSize}M000${this.lists[item].albummid}.jpg`
+        var data = {
+          id: this.lists[item].songid,
+          singer: this.lists[item].singer,
+          songmid: this.lists[item].songmid,
+          songname: this.lists[item].songname,
+          songImage: ImgUrl,
+          interval: this.lists[item].interval
+        }
+        arr.push(data)
+      }
+      this.PlayMusicList({
+        music: arr,
+        playing: true
+      })
     }
   }
 }

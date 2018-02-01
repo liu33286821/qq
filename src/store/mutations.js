@@ -63,5 +63,8 @@ const mutations = {
       state.PlayMusicList.splice(list, 1)
     }
   },
+  [types.LOADING_SHOW] (state, status) {
+    state.loadingShow = status
+  }
 }
 export default mutations

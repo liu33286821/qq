@@ -11,6 +11,7 @@ const state = {
     random: 2
   },
   playModeNum: 1,
-  playing: false
+  playing: false,
+  loadingShow: true
 }
 export default state

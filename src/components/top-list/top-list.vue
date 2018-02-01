@@ -23,6 +23,7 @@
         </ul>
       </div>
     </scroll>
+    <loading></loading>
     <router-view></router-view>
   </div>
 </template>
@@ -30,7 +31,9 @@
 <script type="es6">
 import {getTopList} from '@/api/api'
 import MusicCommonImage from '@/base/music-common-image/music-common-image'
-import Scroll from '../../base/scroll/scroll.vue'
+import Scroll from '@/base/scroll/scroll.vue'
+import Loading from '@/base/loading/loading'
+import {mapMutations} from 'vuex'
 const Height = 100
 export default {
   data () {
@@ -39,9 +42,7 @@ export default {
       scrollY: 0
     }
   },
-  components: {
-    Scroll,
-    MusicCommonImage},
+  components: {Scroll, MusicCommonImage, Loading},
   created () {
     this.getData()
     this.probeType = 3
@@ -51,11 +52,16 @@ export default {
     this.clientHeight()
   },
   methods: {
+    ...mapMutations(['LOADING_SHOW']),
     getData () {
+      this.LOADING_SHOW(true)
       getTopList().then((res) => {
         if (res.code === 0) {
           console.log(res.data)
           this.List = res.data.topList
+          this.$nextTick(() => {
+            this.LOADING_SHOW(false)
+          })
         }
       })
     },

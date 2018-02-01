@@ -39,7 +39,11 @@ export default {
       }
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
-        click: this.click
+        click: this.click,
+        pullDownRefresh: {
+          threshold: 80,
+          stop: 40
+        }
       })
       if (this.listenScroll) {
         let me = this

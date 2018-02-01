@@ -14,6 +14,7 @@
           <index-list :lists="recomPlayList" @playListInfo="getPlayListInfo"></index-list>
         </div>
       </scroll>
+      <loading></loading>
     </div>
   </keep-alive>
 </template>
@@ -24,6 +25,8 @@ import Scroll from '@/base/scroll/scroll'
 import Slider from '@/base/slider/slider'
 import IndexNav from '@/components/index/nav'
 import IndexList from '@/base/index-lists/index-list'
+import Loading from '@/base/loading/loading'
+import {mapMutations} from 'vuex'
 const OFFSET_TOP = 80
 export default {
   name: '',
@@ -33,10 +36,10 @@ export default {
       recomPlayList: {
         title: '新歌推荐',
         list: []
-      }
+      },
     }
   },
-  components: {Slider, Scroll, IndexNav, IndexList},
+  components: {Slider, Scroll, IndexNav, IndexList, Loading},
   created () {
     this.getIndex()
   },
@@ -44,7 +47,9 @@ export default {
     this.ScrollHeight()
   },
   methods: {
+    ...mapMutations(['LOADING_SHOW']),
     getIndex () {
+      this.LOADING_SHOW(true)
       axios.get('api/getIndex').then((res) => {
         var ret = res.data
         var ret2 = ret.split('recom5752458640957665(')[1]
@@ -53,6 +58,9 @@ export default {
         this.CarouselList = Data.focus.data.content
         var recomPlayList = Data.recomPlaylist.data.v_hot.slice(0, 6)
         this.recomPlayList.list = recomPlayList
+        this.$nextTick(() => {
+          this.LOADING_SHOW(false)
+        })
       })
     },
     ScrollHeight () {

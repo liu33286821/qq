@@ -52,25 +52,6 @@ export default {
         playing: true
       })
     },
-    allMusic () {
-      var arr = []
-      for (let item = 0; item < this.lists.length; item++) {
-        let ImgUrl = `http://y.gtimg.cn/music/photo_new/T002R150x150M000${this.lists[item].albummid}.jpg`
-        var data = {
-          id: this.lists[item].songid,
-          singer: this.lists[item].singer,
-          songmid: this.lists[item].songmid,
-          songname: this.lists[item].songname,
-          songImage: ImgUrl,
-          interval: this.lists[item].interval
-        }
-        arr.push(data)
-      }
-      this.PlayMusicList({
-        music: arr,
-        playing: true
-      })
-    }
   }
 }
 </script>

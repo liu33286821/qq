@@ -41,6 +41,7 @@
         </scroll>
       </div>
       <error-info :Info="errorInfo" v-show="errorInfo.status"></error-info>
+      <loading></loading>
     </div>
 </template>
 
@@ -52,12 +53,13 @@ import errorInfo from '@/base/error-info/error-info'
 import MusicList from '@/base/music-list/music-list'
 import MusicCommonTitle from '@/base/music-common-title/music-common-title'
 import MusicCommonImage from '@/base/music-common-image/music-common-image'
-import {mapGetters} from 'vuex'
+import Loading from '@/base/loading/loading'
+import {mapGetters, mapMutations} from 'vuex'
 import {SingerNameSort} from '@/api/common'
 const PaddingHeight = 130
 const OPACITY = 1
 export default {
-  components: {Scroll, Favorite, errorInfo, MusicList, MusicCommonTitle, MusicCommonImage},
+  components: {Scroll, Favorite, errorInfo, MusicList, MusicCommonTitle, MusicCommonImage, Loading},
   data () {
     return {
       cdList: null,
@@ -94,7 +96,9 @@ export default {
     })
   },
   methods: {
+    ...mapMutations(['LOADING_SHOW']),
     getData (id) { //从api中获取到数据。
+      this.LOADING_SHOW(true)
       getPlayListInfo(id).then((res) => {
         this.cdList = res.cdlist[0]
         var _this = this
@@ -103,6 +107,9 @@ export default {
           _this.cdList.songlist[index].singer = SingerNameSort(item.singer)
         })
         //console.log(this.cdList.songlist)
+        this.$nextTick(() => {
+          this.LOADING_SHOW(false)
+        })
       })
     },
     getBgHeight () {  //屏幕测试拉伸的话  页面大小会不一致。 所以需要根据屏幕的宽度来进行改变

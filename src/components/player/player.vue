@@ -277,6 +277,7 @@ export default {
       this.PLAY_STATUS(false)
     },
     PlayMusic (index, id) { //获取点击选中的播放
+      console.log(id)
       this.PLAY_MUSIC({
         index: index,
         id: id
