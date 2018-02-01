@@ -1,6 +1,6 @@
 <template>
   <transition name="top-list">
-    <div id="top-list-info">
+    <div id="top-list-info" ref="TopListInfo">
       <div class="top-list-title" ref="TopListTitle">
         <div @click="goBack" class="go-back"><i class="icon iconfont icon-xiangzuo"></i></div>
         <div v-if="Show" class="top-list-name">{{Info.ListName}}</div>
@@ -30,25 +30,9 @@
               <li :class="{'active':Active === 0}"><span>详情</span><i></i></li>
             </ul>
           </div>
-          <div v-if="Active == 0" class="tlc-content" v-html="Info.info"></div>
-          <div v-if="Active == 1" class="tlc-music">
-            <music-common-title :lists="List" :ImageSize="ImageSize"></music-common-title>
-            <ul>
-              <li v-for="(item,index) in List">
-                <div class="tlc-index">
-                  <p>{{index + 1}}</p>
-                  <p>{{item.in_count}}</p>
-                </div>
-                <div class="tlc-music-name">
-                  <p>{{item.songname}}</p>
-                  <p>{{item.singer}}</p>
-                </div>
-                <div class="singer-icon">
-                  <i class="icon iconfont icon-MV"></i>
-                  <i class="icon iconfont icon-listmore"></i>
-                </div>
-              </li>
-            </ul>
+          <div v-show="Active == 0" ref="TLCContent" class="tlc-content" v-html="Info.info"></div>
+          <div v-show="Active == 1" class="tlc-music">
+            <music-list :bottom="HEIGHT" :lists="List" :ShowNum="ShowNum"></music-list>
           </div>
         </div>
       </scroll>
@@ -62,6 +46,7 @@
 import {getTopListInfo} from '@/api/api'
 import {SingerNameSort, percentum} from '@/api/common'
 import MusicCommonTitle from '@/base/music-common-title/music-common-title'
+import MusicList from '@/base/music-list/music-list'
 import Scroll from '@/base/scroll/scroll'
 import Loading from '@/base/loading/loading'
 import {mapMutations} from 'vuex'
@@ -78,10 +63,12 @@ export default {
       timer: null,
       scrollY: 0,
       NavShow: false,
-      ImageSize: ImageSize
+      ImageSize: ImageSize,
+      ShowNum: 1, //显示排行顺序,
+      HEIGHT: HEIGHT
     }
   },
-  components: {MusicCommonTitle, Scroll, Loading},
+  components: {MusicCommonTitle, Scroll, Loading, MusicList},
   created () {
     this.listenScroll = true
     this.probeType = 3
@@ -117,26 +104,26 @@ export default {
       })
     },
     ShowPage (e) {
-      clearTimeout(this.timer)
-      let children = e.currentTarget.children
+      //clearTimeout(this.timer)
+      //let children = e.currentTarget.children
       let parentWidth = e.currentTarget.clientWidth
       if (e.pageX > parentWidth / 2) {
         this.Active = 0
       } else {
         this.Active = 1
       }
-      for (var i = 0; i < children.length; i++) {
-        if (children[i].className) {
-          console.log(i)
-          let rotateI = children[i].children[1]
-          rotateI.style.left = `${e.layerX - rotateI.clientWidth / 2}px`
-          rotateI.style.top = `${e.layerY - rotateI.clientHeight / 2}px`
-          rotateI.className = 'show'
-          this.timer = setTimeout(() => {
-            rotateI.className = ''
-          }, 500)
-        }
-      }
+//      for (var i = 0; i < children.length; i++) {
+//        if (children[i].className) {
+//          console.log(i)
+//          let rotateI = children[i].children[1]
+//          rotateI.style.left = `${e.layerX - rotateI.clientWidth / 2}px`
+//          rotateI.style.top = `${e.layerY - rotateI.clientHeight / 2}px`
+//          rotateI.className = 'show'
+//          this.timer = setTimeout(() => {
+//            rotateI.className = ''
+//          }, 500)
+//        }
+//      }
     },
     scroll (pos) {
       this.scrollY = pos.y
@@ -150,6 +137,8 @@ export default {
         this.Show = false
       }
       let clientHeight = this.$refs.TopListTop.clientHeight
+      console.log(this.$refs.TopListInfo.clientHeight,clientHeight)
+      this.$refs.TLCContent.style.height = `${this.$refs.TopListInfo.clientHeight + clientHeight - 100}px`
       if (clientHeight < Math.abs(newY) + HEIGHT) {
         this.NavShow = true
         this.$refs.TopListTitle.style.backgroundImage = `url(${this.Info.pic_v12})`
@@ -158,7 +147,6 @@ export default {
         this.NavShow = false
         this.$refs.TopListTitle.style.backgroundImage = 'none'
       }
-
     }
   }
 }
@@ -213,6 +201,7 @@ export default {
     line-height: 24px;
     color: #fff;
   }
+  .tlc-content{background: #fff}
   .tlt-content p:last-child{font-size: 12px}
   .top-list-nav{
     width: 100%;
@@ -257,37 +246,6 @@ export default {
     }
   }
   .top-list-content{width: 100%;height: 100%}
-  .tlc-content{
-    font-size: 14px;
-    padding: 15px;
-    text-align: left;
-    line-height: 24px;
-    color: #999;
-  }
-  .tlc-music{background: #fff}
-  .tlc-music li {
-    display: flex;
-    flex-direction: row;
-    height: 50px;
-    padding: 5px 0;
-    border-bottom: 1px solid #eee;
-  }
-  .tlc-music li div{ width: 60px;line-height: 20px;font-size: 14px}
-  .tlc-music li div:first-child p:last-child{font-size: 12px}
-  .tlc-music li div:last-child{width: 100px;font-size: 22px;line-height: 40px}
-  .tlc-music li div.tlc-music-name {
-    flex: 0 1 100%;
-    text-align: left;
-    line-height: 20px;
-    font-size: 14px;
-    padding-left: 10px;
-  }
-  .tlc-music-name p:first-child{
-    width: 100%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
   .fixed-nav{
     position: fixed;
     top: 40px;

@@ -57,10 +57,19 @@ const mutations = {
     state.currentIndex = index
   },
   [types.REMOVE] (state, list) { //删除当前歌曲
+    let playMusicList = state.PlayMusicList
     if (list instanceof Array) {
       state.PlayMusicList = []
     } else {
-      state.PlayMusicList.splice(list, 1)
+      for (let i = 0; i < playMusicList.length; i++) {
+        if (playMusicList[i].id === list) {
+          state.PlayMusicList.splice(i, 1)
+          if (state.currentIndex > i) {
+            state.currentIndex -= 1
+          }
+        }
+        return
+      }
     }
   },
   [types.LOADING_SHOW] (state, status) {

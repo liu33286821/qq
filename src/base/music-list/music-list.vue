@@ -1,10 +1,14 @@
 <template>
   <div id="music-list" :style="{'paddingBottom':`${bottom}px`}">
-    <music-common-title @allMusic="allMusic" :lists="lists"></music-common-title>
+    <music-common-title :lists="lists"></music-common-title>
     <div class="music-list">
       <ul>
-        <li v-for="item in lists">
-          <div @click="getMusicId(item)">
+        <li v-for="(item,index) in lists">
+          <div v-if="ShowNum == 1" class="show-num">
+            <p>{{index+1}}</p>
+            <p>{{item.in_count}}</p>
+          </div>
+          <div class="music-name" @click="getMusicId(item)">
             <p class="singer-name text">{{item.songname}}</p>
             <p class="singer-music text">{{item.singer}}</p>
           </div>
@@ -29,6 +33,10 @@ export default {
       default: null
     },
     bottom: {
+      type: Number,
+      default: 0
+    },
+    ShowNum: {
       type: Number,
       default: 0
     }
@@ -60,15 +68,13 @@ export default {
     background: #fff;
     color: #333;
   }
+  .music-list ul{background: #fff}
   .music-list li{
-    line-height: 40px;
     display: flex;
-    text-align: left;
-    padding:5px 10px 5px 15px ;
-    border-bottom: 1px solid #cccccc;
-  }
-  .music-list li>div:first-child{
-    width: 85%;
+    flex-direction: row;
+    height: 50px;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
   }
   .singer-name{
     font-size: 15px;
@@ -76,6 +82,20 @@ export default {
     font-family: unset;
   }
   .singer-music{font-size: 12px;line-height: 20px;color: #555}
-  .singer-icon{ text-align: right; width: 15%}
+  .singer-icon{ text-align: right; width: 15%;line-height: 40px}
   .icon-MV{font-size: 20px}
+  .music-name {
+    flex: 0 1 80%;
+    text-align: left;
+    line-height: 20px;
+    font-size: 14px;
+    padding-left: 10px;
+  }
+  .show-num{line-height: 20px;font-size: 12px;text-align: center}
+  .music-name p:first-child{
+    width: 80%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 </style>

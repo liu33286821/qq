@@ -27,6 +27,8 @@ body {
     line-height:1;
     overflow-x: hidden;
     font-family: 'PingFangSC','helvetica neue','hiragino sans gb','arial','microsoft yahei ui','microsoft yahei','simsun','sans-serif'!important;
+  width: 100%;
+  height: 100%;
 }
 
 :focus {

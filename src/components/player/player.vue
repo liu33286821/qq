@@ -31,7 +31,7 @@
                       :class="{'active': index === currentIndex}"
                       @click="PlayMusic(index,list.id)">
                     <span>{{list.songname}}<small> - {{list.singer}}</small></span>
-                    <i class="icon iconfont icon-close" @click.stop="remove(index)"></i>
+                    <i class="icon iconfont icon-close" @click.stop="remove(list.id)"></i>
                     <i class="icon iconfont icon-favorite-outline"></i>
                   </li>
                 </ul>
@@ -274,10 +274,9 @@ export default {
     },
     remove (list) {
       this.REMOVE(list)
-      this.PLAY_STATUS(false)
+      this.PLAY_STATUS(true)
     },
     PlayMusic (index, id) { //获取点击选中的播放
-      console.log(id)
       this.PLAY_MUSIC({
         index: index,
         id: id
