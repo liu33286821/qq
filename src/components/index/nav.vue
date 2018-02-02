@@ -1,14 +1,14 @@
 <template>
     <div class="index-nav">
       <ul>
-        <router-link tag="li" to="/"><i class="icon iconfont icon-user1"></i><span>歌手</span></router-link>
+        <router-link tag="li" to="/singer"><i class="icon iconfont icon-user1"></i><span>歌手</span></router-link>
         <router-link tag="li" to="/toplist"><i class="icon iconfont icon-msnui-bar-chart"></i><span>排行</span></router-link>
-        <router-link tag="li" to="/"><i class="icon iconfont icon-diantai"></i><span>电台</span></router-link>
+        <router-link tag="li" to="/"><i class="icon iconfont icon-diantai" style="color:#ccc"></i><span>电台</span></router-link>
       </ul>
       <ul>
-        <router-link tag="li" to="/"><i class="icon iconfont icon-fenlei"></i><span>分类菜单</span></router-link>
-        <router-link tag="li" to="/"><i class="icon iconfont icon-video"></i><span>视频MV</span></router-link>
-        <router-link tag="li" to="/"><i class="icon iconfont icon-zhuanjiguangpan"></i><span>数字专辑</span></router-link>
+        <router-link tag="li" to="/playlist"><i class="icon iconfont icon-fenlei"></i><span>分类菜单</span></router-link>
+        <router-link tag="li" to="/"><i class="icon iconfont icon-video" style="color:#ccc"></i><span>视频MV</span></router-link>
+        <router-link tag="li" to="/"><i class="icon iconfont icon-zhuanjiguangpan" style="color:#ccc"></i><span>数字专辑</span></router-link>
       </ul>
     </div>
 </template>

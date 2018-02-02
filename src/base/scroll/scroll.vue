@@ -6,6 +6,7 @@
 
 <script>
 import BScroll from 'better-scroll'
+import {getDeviceRatio} from '@/api/common'
 export default {
   name: 'scroll',
   props: {
@@ -24,6 +25,27 @@ export default {
     listenScroll: {
       type: Boolean,
       default: false
+    },
+    /**
+     * 是否派发顶部下拉的事件，用于下拉刷新
+     */
+    pullUpLoad: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 是否派发列表滚动开始的事件
+     */
+    beforeScroll: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 当数据更新后，刷新scroll的延时。
+     */
+    refreshDelay: {
+      type: Number,
+      default: 0
     }
   },
   mounted () {
@@ -40,9 +62,8 @@ export default {
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
         click: this.click,
-        pullDownRefresh: {
-          threshold: 80,
-          stop: 40
+        pullUpLoad: {
+          threshold: -20 * getDeviceRatio
         }
       })
       if (this.listenScroll) {
@@ -50,6 +71,9 @@ export default {
         this.scroll.on('scroll', (pos) => {
           me.$emit('scroll', pos)
         })
+      }
+      if (this.pullUpLoad) {
+        this._initPullDownRefresh()
       }
     },
     enable () {
@@ -66,6 +90,14 @@ export default {
     },
     scrollToElement () {
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
+    },
+    _initPullDownRefresh () { //监听滚动到底部
+      this.scroll.on('scrollEnd', () => {
+        // 滚动到底部
+        if (this.scroll.y <= (this.scroll.maxScrollY + 150) && this.scroll.absStartY < -400) {
+          this.$emit('scrollToEnd', 'text')
+        }
+      })
     }
   },
   watch: {

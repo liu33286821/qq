@@ -29,19 +29,31 @@ export const SongMusic = {
   uin: '',
   fromtag: '999'
 }
-//https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?
-// g_tk=1836039232
-// uin=33286821
-// format=json
-// inCharset=utf-8
+
+//歌手列表页面
+const Singer = {
+  channel: 'singer',
+  page: 'list',
+  key: 'all_all_all',
+  pagesize: 100,
+  pagenum: 1
+}
+export const CommonSinger = Object.assign({}, Singer, commonParams)
+//https://c.y.qq.com/v8/fcg-bin/v8.fcg?
+// channel=singer
+// page=list
+// key=all_all_all
+// pagesize=1000
+// pagenum=1
+// g_tk=141526585
+// jsonpCallback=GetSingerListCallback
+// loginUin=2243863884
+// hostUin=0
+// format=jsonp
+// inCharset=utf8
 // outCharset=utf-8
 // notice=0
-// platform=h5
-// needNewCode=1
-// tpl=3
-// page=detail
-// type=top
-// topid=4
-// _=1517295315284
+// platform=yqq
+// needNewCode=0
 
 

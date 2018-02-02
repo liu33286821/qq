@@ -22,6 +22,8 @@
               @scroll="scroll"
               :probeType="probeType"
               :listenScroll="listenScroll"
+              :pullUpLoad="pullUpLoad"
+              @scrollToEnd="scrollToEnd"
       >
         <div>
           <div class="top-list-nav">
@@ -30,10 +32,12 @@
               <li :class="{'active':Active === 0}"><span>详情</span><i></i></li>
             </ul>
           </div>
-          <div v-show="Active == 0" ref="TLCContent" class="tlc-content" v-html="Info.info"></div>
-          <div v-show="Active == 1" class="tlc-music">
-            <music-list :bottom="HEIGHT" :lists="List" :ShowNum="ShowNum"></music-list>
-          </div>
+          <scroll>
+            <div v-show="Active == 0" ref="TLCContent" class="tlc-content" v-html="Info.info"></div>
+          </scroll>
+            <div v-show="Active == 1" class="tlc-music" ref="TLCMusic">
+              <music-list :bottom="HEIGHT" :lists="List" :ShowNum="ShowNum" :ShowLoading="ShowLoading"></music-list>
+            </div>
         </div>
       </scroll>
       <loading></loading>
@@ -50,7 +54,7 @@ import MusicList from '@/base/music-list/music-list'
 import Scroll from '@/base/scroll/scroll'
 import Loading from '@/base/loading/loading'
 import {mapMutations} from 'vuex'
-const HEIGHT = 60
+const HEIGHT = 420
 const ImageSize = 90 //获取图片的大小不一样。
 export default {
   name: '',
@@ -65,12 +69,14 @@ export default {
       NavShow: false,
       ImageSize: ImageSize,
       ShowNum: 1, //显示排行顺序,
-      HEIGHT: HEIGHT
+      HEIGHT: HEIGHT,
+      ShowLoading: true //滚动加载状态
     }
   },
   components: {MusicCommonTitle, Scroll, Loading, MusicList},
   created () {
     this.listenScroll = true
+    this.pullUpLoad = true
     this.probeType = 3
   },
   mounted () {
@@ -82,10 +88,17 @@ export default {
       this.$router.go(-1)
     },
     getInfo (id) {
+      if (this.List.length >= 100) {
+        this.HEIGHT = 330
+        this.LOADING_SHOW(false)
+        this.ShowLoading = false
+        return
+      }
       this.LOADING_SHOW(true)
       getTopListInfo(id).then((res) => {
         this.Info = res.topinfo
-        this.List = res.songlist
+        //this.List = res.songlist
+        this.LoadingData(res.songlist)
         this.Info.date = res.date
         this.List.forEach(function (item, index) {
           item.singer = SingerNameSort(item.data.singer)
@@ -95,13 +108,22 @@ export default {
           item.songid = item.data.songid
           item.interval = item.data.interval
           item.songmid = item.data.songmid
-          delete item.data
         })
-        console.log(this.List)
-        this.$nextTick(() => {
-          this.LOADING_SHOW(false)
-        })
+        //console.log(this.List)
+        this.LOADING_SHOW(false)
+        this.ShowLoading = false
       })
+    },
+    LoadingData (list) {
+      let length = this.List.length
+      for (let i = length; i < list.length; i++) {
+        if (i < length + 20) {
+          if (i >= 100) {
+            return
+          }
+          this.List.push(list[i])
+        }
+      }
     },
     ShowPage (e) {
       //clearTimeout(this.timer)
@@ -127,6 +149,9 @@ export default {
     },
     scroll (pos) {
       this.scrollY = pos.y
+    },
+    scrollToEnd () {
+      this.getInfo(this.$route.params.id)
     }
   },
   watch: {
@@ -137,9 +162,8 @@ export default {
         this.Show = false
       }
       let clientHeight = this.$refs.TopListTop.clientHeight
-      console.log(this.$refs.TopListInfo.clientHeight,clientHeight)
       this.$refs.TLCContent.style.height = `${this.$refs.TopListInfo.clientHeight + clientHeight - 100}px`
-      if (clientHeight < Math.abs(newY) + HEIGHT) {
+      if (clientHeight < Math.abs(newY) + 60) {
         this.NavShow = true
         this.$refs.TopListTitle.style.backgroundImage = `url(${this.Info.pic_v12})`
         this.$refs.TopListTitle.style.backgroundPosition = 'top'
@@ -201,7 +225,13 @@ export default {
     line-height: 24px;
     color: #fff;
   }
-  .tlc-content{background: #fff}
+  .tlc-content{
+    background: #fff;
+    line-height: 24px;
+    font-size: 12px;
+    text-align: left;
+    padding: 30px 15px;
+  }
   .tlt-content p:last-child{font-size: 12px}
   .top-list-nav{
     width: 100%;

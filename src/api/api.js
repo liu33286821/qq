@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {commonType} from "@/api/config";
+import {commonType,CommonSinger} from "@/api/config";
 
 export function getPlayListInfo (disstid) {
   const url = '/api/getPlayListInfo'
@@ -28,7 +28,6 @@ export function getTopList () {
 }
 
 export function getTopListInfo (id) {
-  console.log(id)
   const url = `/api/getTopList/${id}`
   const data = Object.assign({}, commonType, {
     type: 'top',
@@ -36,6 +35,16 @@ export function getTopListInfo (id) {
     topid: id
   })
   return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
+
+export function getSinger () {
+  let data = CommonSinger
+  const url = '/api/getSinger'
+  return axios.get(url,{
     params: data
   }).then((res) => {
     return Promise.resolve(res.data)

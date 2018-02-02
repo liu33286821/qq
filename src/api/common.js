@@ -37,8 +37,31 @@ function unqiueObjectKeysStr (obj, keys) {
 /*
 * 歌曲热度 百分比
 * */
-
 export function percentum (str) {
   var num = Math.ceil(Number(str).toFixed(2) * 100)
   return `${num}%`
+}
+
+/*
+* 上拉加载 高度不同
+* */
+export function getDeviceRatio () {
+  const isAndroid = window.navigator.appVersion.match(/android/gi)
+  const isIPhone = window.navigator.appVersion.match(/iphone/gi)
+  const devicePixelRatio = window.devicePixelRatio
+  let dpr
+  if (isIPhone) {
+    // iOS下，对于2和3的屏，用2倍的方案，其余的用1倍方案
+    if (devicePixelRatio >= 3) {
+      dpr = 3
+    } else if (devicePixelRatio >= 2){
+      dpr = 2
+    } else {
+      dpr = 1
+    }
+  } else {
+    // 其他设备下，仍旧使用1倍的方案
+    dpr = 1
+  }
+  return dpr
 }

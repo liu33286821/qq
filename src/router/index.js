@@ -7,6 +7,7 @@ import PlayList from '@/components/playlist/playlist'
 import PlayListInfo from '@/components/playListInfo/playListInfo'
 import TopList from '@/components/top-list/top-list'
 import TopListInfo from '@/base/top-list-info/top-list-info'
+import Singer from '@/components/singer/singer'
 Vue.use(Router)
 
 export default new Router({
@@ -48,6 +49,11 @@ export default new Router({
           component: TopListInfo
         }
       ]
+    },
+    {
+      path: '/Singer',
+      name: 'singer',
+      component: Singer
     }
   ]
 })

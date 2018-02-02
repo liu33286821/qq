@@ -6,7 +6,7 @@
         <li v-for="(item,index) in lists">
           <div v-if="ShowNum == 1" class="show-num">
             <p>{{index+1}}</p>
-            <p>{{item.in_count}}</p>
+            <!--<p>{{item.in_count}}</p>-->
           </div>
           <div class="music-name" @click="getMusicId(item)">
             <p class="singer-name text">{{item.songname}}</p>
@@ -19,6 +19,7 @@
         </li>
       </ul>
     </div>
+    <div v-if="ShowLoading" class="show-loading">正在加载中.....</div>
   </div>
 </template>
 
@@ -39,6 +40,10 @@ export default {
     ShowNum: {
       type: Number,
       default: 0
+    },
+    ShowLoading: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -73,7 +78,7 @@ export default {
     display: flex;
     flex-direction: row;
     height: 50px;
-    padding: 5px 0;
+    padding: 5px 15px;
     border-bottom: 1px solid #eee;
   }
   .singer-name{
@@ -91,11 +96,14 @@ export default {
     font-size: 14px;
     padding-left: 10px;
   }
-  .show-num{line-height: 20px;font-size: 12px;text-align: center}
+  .show-num{line-height: 40px;font-size: 15px;text-align: center}
   .music-name p:first-child{
     width: 80%;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+  }
+  .show-loading{
+    line-height: 40px;
   }
 </style>
