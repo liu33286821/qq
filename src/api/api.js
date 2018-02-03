@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {commonType,CommonSinger} from "@/api/config";
+import {commonType, CommonSinger, SingerDetail, Search} from "@/api/config";
 
 export function getPlayListInfo (disstid) {
   const url = '/api/getPlayListInfo'
@@ -44,9 +44,43 @@ export function getTopListInfo (id) {
 export function getSinger () {
   let data = CommonSinger
   const url = '/api/getSinger'
-  return axios.get(url,{
+  return axios.get(url, {
     params: data
   }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
+
+export function getSingerInfo (id) {
+  const url = `/api/getSingerInfo`
+  let data = Object.assign({}, SingerDetail, {
+    singerid: id
+  })
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  }).catch(() => {
+    console.log('连接不可用')
+  })
+}
+
+export function getSearch (keys = '', page = 1) {
+  const url = '/api/search'
+  let data = Object.assign({}, Search, {
+    w: keys,
+    p: page
+  })
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
+
+export function getSearchHot () {
+  const url = '/api/searchhot'
+  return axios.get(url).then((res) => {
     return Promise.resolve(res.data)
   })
 }

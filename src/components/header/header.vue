@@ -5,11 +5,11 @@
       <nav>
         <router-link to="/my">我的</router-link>
         <router-link to="/">音乐馆</router-link>
-        <router-link to="/find">发现</router-link>
+        <router-link to="/search">发现</router-link>
       </nav>
       <i class="icon iconfont icon-add" @click="showAdd"></i>
     </header>
-    <div id="index-search" ref="indexSearch">
+    <div id="index-search" ref="indexSearch" @click="Search">
       <p><i class="icon iconfont icon-search"></i>搜索</p>
     </div>
     <div ref="setting"  @click="hideMenu" class="setting">
@@ -62,6 +62,9 @@ export default {
     },
     hideAdd () {
       this.$refs.addSetting.style.display = 'none'
+    },
+    Search () {
+      this.$router.push('/search')
     }
   }
 }

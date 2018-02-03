@@ -1,33 +1,40 @@
 <template>
     <div id="singer">
       <div id="singer-top">
-        <div class="back"><i class="icon iconfont icon-xiangzuo"></i></div>
+        <div class="back" @click="goBack"><i class="icon iconfont icon-xiangzuo"></i></div>
+        <div class="st-title">歌手列表</div>
         <div class="singer-search"><i class="icon iconfont icon-search"></i></div>
       </div>
-      <h2></h2>
       <ul id="fixed-num" ref="fixedNum"
           @touchstart.stop.pervent="onTouchStart"
           @touchmove.stop.pervent="onTouchMove"
           @touchend.stop.pervent>
         <li v-for="(item, index) in SingerSort" :class="{'active':currentIndex == index}"  :data-index="index">{{item}}</li>
       </ul>
-      <h2 id="singer-title">热门</h2>
+      <h2 id="singer-title">{{SingerTitle}}</h2>
       <div class="singer-scontent">
         <scroll id="singer-scroll"
                 :listen-scroll="listenScroll"
                 :probeType="probeType"
                 :data="Singer"
+                @scroll="scroll"
                 ref="listview"
         >
           <ul ref="SingerScroll">
             <li v-for="(item,index) in Singer">
               <ul class="singer-list">
-                <li v-for="i in item.item">{{i.Fsinger_name}}</li>
+                <li v-for="i in item.item" @click="SingerDetail(i.Fsinger_id)">
+                  <div class="singer-image"><img v-lazy="i.images"/></div>
+                  <div class="singer-name"><p>{{i.Fsinger_name}}</p></div>
+                </li>
               </ul>
             </li>
           </ul>
         </scroll>
       </div>
+      <transition name="singerDetail">
+        <router-view></router-view>
+      </transition>
     </div>
 </template>
 
@@ -42,15 +49,15 @@ export default {
     return {
       Singer: [],
       SingerSort: [],
-      scrollY: 0,
-      currentIndex: 0
+      scrollY: -1,
+      currentIndex: 0,
+      SingerTitle: '热门'
     }
   },
   created () {
     this.getSinger()
     this.listenScroll = true
     this.probeType = 3
-    this.scroll = {}
     this.touches = {}
     this.listHeight = []
   },
@@ -88,6 +95,7 @@ export default {
         arr2.push(obj)
       }
       for (let i = 0; i < data.length; i++) {
+        data[i].images = `http://y.gtimg.cn/music/photo_new/T001R150x150M000${data[i].Fsinger_mid}.jpg?max_age=2592000`
         for (let b = 0; b < arr2.length; b++) {
           if (data[i].Findex === arr2[b].title) {
             arr2[b].item.push(data[i])
@@ -104,7 +112,6 @@ export default {
     },
     onTouchStart (e) { //触摸右边的滑动。 获取目标的位置
       let index = this.getDataType(e.target, 'index')
-      this.touches.init = true
       let firstTouch = e.touches[0]
       this.touches.y1 = firstTouch.pageY
       this.touches.index = index
@@ -114,8 +121,7 @@ export default {
       let firstTouch = e.touches[0]  //触摸移动的时候 发生变化
       this.touches.y2 = firstTouch.pageY
       let delta = (this.touches.y2 - this.touches.y1) / ANCHOR_HEIGHT || 0
-      console.log(this.touches.y2, this.touches.y1)
-      let index = parseInt(this.touches.index + delta)
+      let index = parseInt(this.touches.index)  + delta
       this._scrollTo(index)
     },
     getDataType (e, type, val) {
@@ -138,9 +144,12 @@ export default {
       this.scrollY = -this.listHeight[index]
       this.currentIndex = index
       this.$refs.listview.scrollToElement(this.$refs.SingerScroll.children[index], 0)
-      console.log( this.currentIndex )
     },
     _listHeightSort () {
+      /*
+      * 一开始数组没清空。  会一直添加。  后期考虑在里面先把数组清空
+      * */
+      this.listHeight = []
       let children = this.$refs.SingerScroll.children
       for (let i = 0; i < children.length; i++) {
         this.listHeight.push(children[i].offsetTop)
@@ -149,15 +158,32 @@ export default {
     refresh () {
       this.$refs.listview.refresh()
     },
+    SingerDetail (id) {
+      this.$router.push('/singer/' + id)
+    },
+    goBack () {
+      this.$router.go(-1)
+    }
   },
   watch: {
     scrollY (newY, oldY) {
-
-    },
-    data () {
-      setTimeout(() => {
-        this._listHeightSort()
-      },50)
+      const listHeight = this.listHeight
+      if (newY > 0) {
+        this.currentIndex = 0
+        return
+      }
+      for (let i = 0; i < listHeight.length - 1; i++) {
+        let height1 = listHeight[i]
+        let height2 = listHeight[i + 1]
+        if (-newY >= height1 && -newY < height2) {
+          this.currentIndex = i
+          this.SingerTitle = this.Singer[i].title
+          return
+        }
+      }
+      // 当滚动到底部，且-newY大于最后一个元素的上限
+      this.currentIndex = listHeight.length - 1
+      this.SingerTitle = this.Singer[this.currentIndex].title
     }
   }
 }
@@ -179,6 +205,7 @@ export default {
     z-index: 10;
     background: #31c27c;
     color: #fff;
+    display: flex;
   }
   #singer-top .icon {
     font-size: 20px;
@@ -223,5 +250,32 @@ export default {
     position: relative;
     z-index: 1;
   }
-
+  .singer-list li {
+    width: 100%;
+    height: 50px;
+    line-height: 40px;
+    display: flex;
+  }
+  .singer-list li div:first-child{
+    width: 50px;
+    height: 50px;
+    padding:5px;
+  }
+  .singer-list li img{width: 100%;height: 100%;border-radius: 50%;}
+  .singer-list li div:last-child{
+    flex: 0 1 100%;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    padding:10px 0;
+    text-indent: 10px;
+  }
+  .st-title{
+    flex: 0px 1 1;
+  }
+  .singerDetail-enter-active,.singerDetail-leave-active {
+    transition: all .5s;
+  }
+  .singerDetail-enter,.singerDetail-leave-to {
+    transform:translate3d(100%,0,0);
+  }
 </style>

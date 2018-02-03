@@ -64,6 +64,7 @@ export default {
     padding: 10px 0;
     display: flex;
     border-top: 1px solid #ccc;
+    z-index: 55;
   }
   .play-music{
     flex: 4;

@@ -7,7 +7,7 @@ import fastclick from 'fastclick'
 import VueLazyLoad from 'vue-lazyload'
 import store from './store'
 Vue.use(VueLazyLoad, {
-  loading: '/static/loading.gif'
+  loading: '/static/default.png'
 })
 Vue.config.productionTip = false
 fastclick.attach(document.body)

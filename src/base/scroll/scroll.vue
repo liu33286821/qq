@@ -8,7 +8,6 @@
 import BScroll from 'better-scroll'
 import {getDeviceRatio} from '@/api/common'
 export default {
-  name: 'scroll',
   props: {
     data: {
       type: Array,

@@ -29,7 +29,7 @@
                 <ul>
                   <li v-for="list,index in lists"
                       :class="{'active': index === currentIndex}"
-                      @click="PlayMusic(index,list.id)">
+                      @click.stop="PlayMusic(index,list.id)">
                     <span>{{list.songname}}<small> - {{list.singer}}</small></span>
                     <i class="icon iconfont icon-close" @click.stop="remove(list.id)"></i>
                     <i class="icon iconfont icon-favorite-outline"></i>
@@ -45,7 +45,7 @@
       </div>
     </div>
     <transition name="fade">
-      <div id="play-music-info" v-if="lists.length" v-show="PlayMusicInfoShow">
+      <div id="play-music-info" ref="PlayMusicInfo" v-if="lists.length" v-show="PlayMusicInfoShow">
           <div class="play-music-bg" :style="{'backgroundImage':`url(${lists[currentIndex].songImage})`}"></div>
           <div class="content">
             <div class="play-music-info-top">
@@ -213,7 +213,7 @@ export default {
     Show (e) {//展开播放页面
         this.$refs.scrollDiv2.style.transform = 'translate3d(0,0,0)'
         this.$refs.scrollDiv.style.opacity = '1'
-        this.$refs.scrollDiv.style.zIndex = '100'
+        this.$refs.scrollDiv.style.zIndex = '101'
       },
     Pause () {//暂停
         let audio = this.$refs.Audio
@@ -284,9 +284,11 @@ export default {
     },
     PlayInfoHide () { //播放详情页面隐藏
       this.PlayMusicInfoShow = false
+      this.$refs.PlayMusicInfo.style.zIndex = ''
     },
     PlayInfoShow () { //播发详情页面显示
       this.PlayMusicInfoShow = true
+      this.$refs.PlayMusicInfo.style.zIndex = '60'
     },
     TouchStart (e) {
       this.touches.Start = true //开始滑动

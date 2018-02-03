@@ -57,7 +57,7 @@ export default {
       this.LOADING_SHOW(true)
       getTopList().then((res) => {
         if (res.code === 0) {
-          console.log(res.data)
+          //console.log(res.data)
           this.List = res.data.topList
           this.$nextTick(() => {
             this.LOADING_SHOW(false)

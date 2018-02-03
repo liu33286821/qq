@@ -39,21 +39,27 @@ const Singer = {
   pagenum: 1
 }
 export const CommonSinger = Object.assign({}, Singer, commonParams)
-//https://c.y.qq.com/v8/fcg-bin/v8.fcg?
-// channel=singer
-// page=list
-// key=all_all_all
-// pagesize=1000
-// pagenum=1
-// g_tk=141526585
-// jsonpCallback=GetSingerListCallback
-// loginUin=2243863884
-// hostUin=0
-// format=jsonp
-// inCharset=utf8
-// outCharset=utf-8
-// notice=0
-// platform=yqq
-// needNewCode=0
 
+const SingerDetailType = {
+  num: 200,
+  begin: 0,
+  order: 'listen',
+  platform: 'h5page',
+  _: 1517626923128
+}
+export const SingerDetail = Object.assign({}, commonType, SingerDetailType)
 
+const SearchType = {
+  zhidaqu: 1,
+  catZhida: 1,
+  t: 0,
+  flag: 1,
+  ie: 'utf-8',
+  sem: 1,
+  aggr: 0,
+  perpage: 20,
+  n: 20,
+  remoteplace: 'txt.mqq.all',
+  _: 1517642453934
+}
+export const Search = Object.assign({}, commonType, SearchType)

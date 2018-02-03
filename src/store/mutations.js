@@ -40,12 +40,12 @@ const mutations = {
   },
   [types.PLAY_LIST] (state, data) { //列表添加
     let playlist = state.PlayMusicList
+    state.currentIndex = data.index
     for (let i = 0; i < playlist.length; i++) {
       if (i.id === data.id) {
         return
       }
     }
-    state.currentIndex = data.index
   },
   [types.PLAY_STATUS] (state, status) { //状态管理
     state.playing = status

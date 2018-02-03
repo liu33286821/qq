@@ -1,6 +1,6 @@
 <template>
   <div id="music-list" :style="{'paddingBottom':`${bottom}px`}">
-    <music-common-title :lists="lists"></music-common-title>
+    <music-common-title :lists="lists" v-if="ShowNav"></music-common-title>
     <div class="music-list">
       <ul>
         <li v-for="(item,index) in lists">
@@ -44,6 +44,10 @@ export default {
     ShowLoading: {
       type: Boolean,
       default: false
+    },
+    ShowNav: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
@@ -90,11 +94,14 @@ export default {
   .singer-icon{ text-align: right; width: 15%;line-height: 40px}
   .icon-MV{font-size: 20px}
   .music-name {
-    flex: 0 1 80%;
+    flex: 0 1 100%;
     text-align: left;
     line-height: 20px;
     font-size: 14px;
     padding-left: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   .show-num{line-height: 40px;font-size: 15px;text-align: center}
   .music-name p:first-child{

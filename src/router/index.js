@@ -8,6 +8,7 @@ import PlayListInfo from '@/components/playListInfo/playListInfo'
 import TopList from '@/components/top-list/top-list'
 import TopListInfo from '@/base/top-list-info/top-list-info'
 import Singer from '@/components/singer/singer'
+import SingerDetail from '@/components/singer-detail/singer-detail'
 Vue.use(Router)
 
 export default new Router({
@@ -27,8 +28,8 @@ export default new Router({
       component: My
     },
     {
-      path: '/find',
-      name: 'Find',
+      path: '/search',
+      name: 'search',
       component: Find
     },
     {
@@ -53,7 +54,13 @@ export default new Router({
     {
       path: '/Singer',
       name: 'singer',
-      component: Singer
+      component: Singer,
+      children: [
+        {
+          path: ':id',
+          component: SingerDetail
+        }
+      ]
     }
   ]
 })
